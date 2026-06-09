@@ -261,7 +261,7 @@ async function _startBotImpl() {
         const timeout = setTimeout(() => {
           sock.ev.off("connection.update", pairingWaitHandler);
           reject(new Error("Timeout waiting for WS to be ready (20s)"));
-        }, 20000);
+        }, 60000);
 
         const pairingWaitHandler = (update) => {
           if (update.connection === "connecting") {
@@ -289,10 +289,20 @@ async function _startBotImpl() {
       console.log(`  → Link with phone number → enter code`);
       console.log(`${line}\n`);
     } catch (err) {
-      logger.error({ err }, "Failed to request pairing code — retrying in 8s");
+      state.pairingAttempts = (state.pairingAttempts || 0) + 1;
+      const MAX_PAIRING_ATTEMPTS = 5;
+      if (state.pairingAttempts >= MAX_PAIRING_ATTEMPTS) {
+        logger.error({ attempts: state.pairingAttempts }, "Pairing failed after max attempts — stopping. Restart the bot and try again.");
+        console.error(`\n❌ Pairing failed ${MAX_PAIRING_ATTEMPTS} times in a row. Bot stopped.`);
+        console.error(`   Restart the bot and enter your phone number again.\n`);
+        try { sock.end(new Error("pairing-max-attempts")); } catch {}
+        return;
+      }
+      const delay = Math.min(8000 * Math.pow(2, state.pairingAttempts - 1), 60000);
+      logger.error({ err, attempt: state.pairingAttempts, retryInMs: delay }, \`Failed to request pairing code — retrying in \${delay / 1000}s\`);
       // Close the current socket cleanly so it doesn't linger and block the retry
       try { sock.end(new Error("pairing-failure-cleanup")); } catch {}
-      setTimeout(() => startBot().catch(console.error), 8000);
+      setTimeout(() => startBot().catch(console.error), delay);
       return;
     }
   }
