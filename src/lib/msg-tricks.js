@@ -9,7 +9,7 @@
 
 import { createRequire } from "module";
 const _require = createRequire(import.meta.url);
-const { generateWAMessageFromContent } = _require("socketon");
+const { generateWAMessageFromContent } = _require("@whiskeysockets/baileys");
 
 // ─── Forwarding tricks ───────────────────────────────────────────────────────
 
