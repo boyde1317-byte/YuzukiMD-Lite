@@ -253,57 +253,44 @@ async function _startBotImpl() {
     setSetting("ownerNumber", phoneNumber);
     logger.info({ phoneNumber }, "ownerNumber saved to settings.json");
 
-    try {
-      // Wait for the WS to reach "connecting" state (noise handshake done),
-      // then add a 500 ms settle delay before requesting the code.
-      // Also fail fast if the socket closes during the wait.
-      await new Promise((resolve, reject) => {
-        const timeout = setTimeout(() => {
-          sock.ev.off("connection.update", pairingWaitHandler);
-          reject(new Error("Timeout waiting for WS to be ready (20s)"));
-        }, 60000);
+    // ── Pairing code — direct approach (no "connecting" event wait) ──────────
+    // Root cause of the race condition: makeWASocket() fires connection:"connecting"
+    // almost immediately, BEFORE the event listener below can be registered.
+    // The listener misses it, waits until timeout, and loops forever.
+    //
+    // Fix: give Baileys 3 s to initialise its WS, then call requestPairingCode()
+    // directly.  Baileys v6 queues the request internally and handles WS state
+    // itself — no manual "connecting" wait needed.
+    await new Promise(r => setTimeout(r, 3000));
 
-        const pairingWaitHandler = (update) => {
-          if (update.connection === "connecting") {
-            clearTimeout(timeout);
-            sock.ev.off("connection.update", pairingWaitHandler);
-            // 500 ms allows noise-protocol bytes to settle before pairing request
-            setTimeout(resolve, 500);
-          } else if (update.connection === "close") {
-            clearTimeout(timeout);
-            sock.ev.off("connection.update", pairingWaitHandler);
-            const reason = update.lastDisconnect?.error?.message ?? "unknown";
-            reject(new Error(`WS closed before pairing ready: ${reason}`));
-          }
-        };
-        sock.ev.on("connection.update", pairingWaitHandler);
-      });
+    let pairingCode = null;
+    const MAX_PAIRING_ATTEMPTS = 5;
+    for (let attempt = 1; attempt <= MAX_PAIRING_ATTEMPTS; attempt++) {
+      try {
+        pairingCode = await sock.requestPairingCode(phoneNumber);
+        break; // success — exit retry loop
+      } catch (err) {
+        logger.warn({ err, attempt }, "requestPairingCode attempt failed");
+        if (attempt === MAX_PAIRING_ATTEMPTS) {
+          console.error(`\n❌ Pairing failed after ${MAX_PAIRING_ATTEMPTS} attempts. Restart and try again.\n`);
+          try { sock.end(new Error("pairing-max-attempts")); } catch {}
+          return;
+        }
+        const retryDelay = Math.min(5000 * attempt, 30000);
+        console.log(`  ⏳ Retrying pairing code in ${retryDelay / 1000}s (attempt ${attempt}/${MAX_PAIRING_ATTEMPTS})...`);
+        await new Promise(r => setTimeout(r, retryDelay));
+      }
+    }
 
-      const code = await sock.requestPairingCode(phoneNumber);
-      state.pairingCode = code;
+    if (pairingCode) {
+      state.pairingCode = pairingCode;
       const line = "=".repeat(44);
       console.log(`\n${line}`);
       console.log(`  ✅ Pairing code for +${phoneNumber}:`);
-      console.log(`  📱 Code: ${code}`);
+      console.log(`  📱 Code: ${pairingCode}`);
       console.log(`  WhatsApp → Settings → Linked Devices`);
       console.log(`  → Link with phone number → enter code`);
       console.log(`${line}\n`);
-    } catch (err) {
-      state.pairingAttempts = (state.pairingAttempts || 0) + 1;
-      const MAX_PAIRING_ATTEMPTS = 5;
-      if (state.pairingAttempts >= MAX_PAIRING_ATTEMPTS) {
-        logger.error({ attempts: state.pairingAttempts }, "Pairing failed after max attempts — stopping. Restart the bot and try again.");
-        console.error(`\n❌ Pairing failed ${MAX_PAIRING_ATTEMPTS} times in a row. Bot stopped.`);
-        console.error(`   Restart the bot and enter your phone number again.\n`);
-        try { sock.end(new Error("pairing-max-attempts")); } catch {}
-        return;
-      }
-      const delay = Math.min(8000 * Math.pow(2, state.pairingAttempts - 1), 60000);
-      logger.error({ err, attempt: state.pairingAttempts, retryInMs: delay }, "Failed to request pairing code — retrying in " + (delay / 1000) + "s");
-      // Close the current socket cleanly so it doesn't linger and block the retry
-      try { sock.end(new Error("pairing-failure-cleanup")); } catch {}
-      setTimeout(() => startBot().catch(console.error), delay);
-      return;
     }
   }
 
