@@ -6,6 +6,11 @@
 
 ## ✨ What's New in V2 / V3
 
+> **Latest updates (June 2025):**
+> - 🎨 All media assets (`.jpg`, `.png`, `.mp4`, `.mp3`, `.webp`) migrated to **GitHub Releases CDN** — repo is now ~3 MB lighter and fully URL-based
+> - ⚡ Migrated from custom `socketon` fork to **official `@whiskeysockets/baileys` v6** — pairing code, buttons, and all features remain fully working
+> - 📄 New `src/assets.js` — single-file URL map for all 27 media constants, easy to update
+
 | Feature | V1 | V2 | V3 (Yuzuki Merge) |
 |---|---|---|---|
 | AI Assistants | ❌ | ✅ GPT · Claude · Gemini | ✅ |
@@ -42,6 +47,7 @@ Yuzuki-Md-V2/
 │   ├── index.js          # Entry point & process guards
 │   ├── bot.js            # Baileys connection + pairing code + sticker trigger hook
 │   ├── commands.js       # All command handlers (native + plugin fallback)
+│   ├── assets.js         # URL map for all media assets (GitHub Releases CDN)
 │   ├── menu.js           # Menu builder (categories + list view)
 │   ├── menuImage.js      # Image-based menu renderer
 │   ├── settings.js       # JSON settings store (prefix, owners, keys…)
@@ -333,6 +339,26 @@ Every user has a profile with: **Level · XP · Money · Bank · Health · Daily
 
 ---
 
+## 🖼️ Media Assets — URL-Based CDN
+
+All images, audio, and video used by the bot are hosted on **GitHub Releases** (not bundled in the repo).
+This keeps the repository lightweight and clones fast.
+
+| File | Purpose |
+|---|---|
+| `src/assets.js` | Central URL map — import `ASSETS.XXX` anywhere |
+| `v1.0-assets` release | All 27 media files hosted as public release assets |
+
+**Base URL:** `https://github.com/boyde1317-byte/YuzukiMD-Lite/releases/download/v1.0-assets/`
+
+To update or replace a media file:
+1. Upload the new file as a release asset (or create a new `v1.x-assets` release)
+2. Update the URL in `src/assets.js`
+
+> **Note:** 5 files (`yuzuki.png`, `yuzuki-mp4.mp4`, `yuzuki-mp3.mp3`, `yuzuki-daftar.png`, `yuzuki-store.png`) were empty placeholders in the original repo — replace their URLs in `src/assets.js` when you have the real files.
+
+---
+
 ## 🏗️ Architecture — UI Trick Libraries
 
 | File | What It Does |
@@ -352,7 +378,7 @@ Every user has a profile with: **Level · XP · Money · Bank · Health · Daily
 ## 🗃️ Tech Stack
 
 - **Runtime**: Node.js 20+, ESM (`"type": "module"`)
-- **WhatsApp**: [Baileys](https://github.com/WhiskeySockets/Baileys) via `socketon`
+- **WhatsApp**: [@whiskeysockets/baileys](https://github.com/WhiskeySockets/Baileys) v6 (official — migrated from custom fork)
 - **AI**: OpenAI SDK · Anthropic SDK · Google Generative AI
 - **Media**: `@distube/ytdl-core` · `sharp` · `@napi-rs/canvas` · `fluent-ffmpeg`
 - **Auth**: Pairing code (no QR scan required)
