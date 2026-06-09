@@ -24,8 +24,8 @@ try { await import("dotenv/config"); } catch {}
 function _mkChalk() { const f = (...a) => String(a[0] ?? ""); return new Proxy(f, { get: () => _mkChalk() }); }
 let chalk;
 try { chalk = (await import("chalk")).default; } catch { chalk = _mkChalk(); }
-import "./server.js";
-import { startBot, logger } from "./bot.js";
+await import("./server.js");
+const { startBot, logger } = await import("./bot.js");
 
 // ── Validate Node version ─────────────────────────────────────────────────────
 const nodeVersion = parseInt(process.version.slice(1));
