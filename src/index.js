@@ -10,7 +10,7 @@ const _KEY_PKGS = ["chalk", "pino", "axios", "dotenv", "figlet", "cheerio", "mom
 if (_KEY_PKGS.some(p => !existsSync(`./node_modules/${p}`))) {
   console.log("[*] Missing packages detected — running npm install...");
   try {
-    execSync("npm install --no-audit --no-fund --loglevel=error", { stdio: "inherit" });
+    execSync("npm install --no-audit --no-fund --loglevel=error --registry https://registry.npmjs.org", { stdio: "inherit" });
     console.log("[+] Dependencies installed successfully.\n");
   } catch (e) {
     console.error("[!] npm install encountered errors (bot will still try to start):", e.message);
