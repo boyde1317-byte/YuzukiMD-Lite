@@ -45,7 +45,7 @@ const {
   generateWAMessageFromContent,
   prepareWAMessageMedia,
   proto,
-} = _require("socketon");
+} = _require("@whiskeysockets/baileys");
 // ── . merged scrapers & libs ──────────────────────────────────────────
 import { tiktokDl } from "./lib/scrape/tiktok.js";
 import { igdl as igDl } from "./lib/scrape/instagram.js";
