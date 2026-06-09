@@ -3,9 +3,9 @@
 // ║  No need to touch commands.js for menu changes.         ║
 // ╚══════════════════════════════════════════════════════════╝
 
-import { fileURLToPath } from "url";
-// Local background image — lives in src/assets/ alongside future bot images
-export const MENU_BG = fileURLToPath(new URL("./assets/menu_bg.jpg", import.meta.url));
+import { ASSETS } from "./assets.js";
+// Background image hosted on GitHub Releases — no local file needed
+export const MENU_BG = ASSETS.MENU_BG;
 
 export const CATEGORIES = {
   ai: {
