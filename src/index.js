@@ -36,23 +36,29 @@ if (nodeVersion < 20) {
 
 // ── Blue whale startup banner ─────────────────────────────────────────────────
 function printBanner() {
-  const b  = chalk.hex("#0096FF");     // ocean blue
-  const lb = chalk.hex("#64C8FF");     // light blue
+  const b  = chalk.hex("#0d6efd"); // Deep ocean blue
+  const lb = chalk.hex("#0dcaf0"); // Light water spout blue
+  const wave = chalk.cyan;         // Cyan waves
   const w  = chalk.white.bold;
-  const d  = chalk.dim;
-  const c  = chalk.cyan.bold;
+  const c  = chalk.cyan;
 
   const whale = [
-    b("          .-'''''''''''''''''''''''''-.         "),
-    b("        .'") + lb("  🐋  ") + w("Y U Z U K I  M D") + lb("  v2  ") + b("'.       "),
-    b("       /") + d("   ─────────────────────────────") + b("  \\      "),
-    b("      :") + d("      WhatsApp Bot  •  Baileys Fork    ") + b(":     "),
-    b("      :") + d(`      Node ${process.version}  •  Powered by focashi  `) + b(":     "),
-    b("      :") + d("      ") + c("github.com/KyokaAizen665/Yuzuki-Md-V2") + b(":  "),
-    b("      :") + d("                                       ") + b(":___  "),
-    b("       \\") + d("  ─────────────────────────────────") + b("/") + lb("~~~~"),
-    b("        '.") + d("_________________________________") + b(".'        "),
-    b("       ") + lb("~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~") + b("         "),
+    lb("                             _ "),
+    lb("                           _(_)_"),
+    lb("                         _(     )_"),
+    b("       .-\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"-(       )-\"\"\"\"\"\"\"\"\"\"\"-. "),
+    b("     .'                    \"\"\"\"\"\"\"                 '. "),
+    b("    /   O                                            \\      _ "),
+    b("   |                                                  \\_   / \\ "),
+    b("   |                                                    \\_/  | "),
+    b("    \\                                                        / "),
+    b("     '.____________________________________________________.' "),
+    wave(" ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^ "),
+    wave("  ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~ "),
+    "",
+    chalk.bold.white("                    Y U Z U K I   M D   v 2"),
+    c(`                    Node ${process.version} • Baileys Fork`),
+    c("               github.com/KyokaAizen665/Yuzuki-Md-V2")
   ];
 
   console.log();
