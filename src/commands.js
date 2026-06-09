@@ -2863,7 +2863,7 @@ break;
 
       case "readqr": {
         const dl=await dlQuoted(msg,jid);if(!dl?.qm?.imageMessage){await reply("Reply to an image containing a QR code");break;}
-        try{const {default:Jimp}=await import("jimp");const jsQR=_require("jsqr");const img=await Jimp.read(dl.buf);const {data,width,height}=img.bitmap;const code=jsQR(Uint8ClampedArray.from(data),width,height);if(code){await replyChannel(`📷 *QR Content:*\n${code.data}`);}else{await reply("❌ No QR code found in image.");}}catch(e){await reply(`❌ Read QR: ${e.message}`);}
+        try{const {Jimp}=await import("jimp");const jsQR=_require("jsqr");const img=await Jimp.fromBuffer(dl.buf);const {data,width,height}=img.bitmap;const code=jsQR(Uint8ClampedArray.from(data),width,height);if(code){await replyChannel(`📷 *QR Content:*\n${code.data}`);}else{await reply("❌ No QR code found in image.");}}catch(e){await reply(`❌ Read QR: ${e.message}`);}
         break;
       }
 
