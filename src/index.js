@@ -6,7 +6,7 @@ import { execSync }   from "child_process";
 import { existsSync } from "fs";
 
 // Packages that panel installs commonly skip — if any are missing, run npm install
-const _KEY_PKGS = ["chalk", "pino", "axios", "dotenv", "figlet", "cheerio", "moment-timezone", "yt-search", "file-type", "jimp", "lodash"];
+const _KEY_PKGS = ["chalk", "pino", "axios", "dotenv", "figlet", "cheerio", "moment-timezone", "yt-search", "file-type", "jimp", "lodash", "@whiskeysockets/baileys"];
 if (_KEY_PKGS.some(p => !existsSync(`./node_modules/${p}`))) {
   console.log("[*] Missing packages detected — running npm install...");
   try {
