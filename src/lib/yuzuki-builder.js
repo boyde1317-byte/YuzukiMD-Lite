@@ -16,7 +16,7 @@ const _require = createRequire(import.meta.url);
 const {
   generateWAMessageFromContent,
   prepareWAMessageMedia,
-} = _require("socketon");
+} = _require("@whiskeysockets/baileys");
 import crypto from "crypto";
 import sharp from "sharp";
 
