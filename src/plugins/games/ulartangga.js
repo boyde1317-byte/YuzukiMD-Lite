@@ -48,7 +48,8 @@ try {
     process.cwd(),
     "src",
     "assets",
-    "menu_bg.jpg",
+    "yuzuki",
+    "yuzuki-games.jpg",
   );
   if (fs.existsSync(thumbPath)) {
     thumbUT = fs.readFileSync(thumbPath);

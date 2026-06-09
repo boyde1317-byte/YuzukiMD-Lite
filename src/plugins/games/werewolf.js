@@ -34,12 +34,12 @@ let thumbDay = null;
 let thumbWin = null;
 
 try {
-  const assetsPath = path.join(process.cwd(), "src", "assets");
-  if (fs.existsSync(path.join(assetsPath, "menu_bg.jpg"))) {
-    thumbWW = fs.readFileSync(path.join(assetsPath, "menu_bg.jpg"));
-    thumbNight = fs.readFileSync(path.join(assetsPath, "menu_bg.jpg"));
-    thumbDay = fs.readFileSync(path.join(assetsPath, "menu_bg.jpg"));
-    thumbWin = fs.readFileSync(path.join(assetsPath, "menu_bg.jpg"));
+  const assetsPath = path.join(process.cwd(), "src", "assets", "yuzuki");
+  if (fs.existsSync(path.join(assetsPath, "yuzuki-games.jpg"))) {
+    thumbWW = fs.readFileSync(path.join(assetsPath, "yuzuki-games.jpg"));
+    thumbNight = fs.readFileSync(path.join(assetsPath, "yuzuki.png"));
+    thumbDay = fs.readFileSync(path.join(assetsPath, "yuzuki.png"));
+    thumbWin = fs.readFileSync(path.join(assetsPath, "yuzuki-winner.jpg"));
   }
 } catch (e) {
   console.log("[WW] Failed to load thumbnails:", e.message);

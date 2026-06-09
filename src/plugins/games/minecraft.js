@@ -51,7 +51,7 @@ const encCost = (r) =>
 
 let thumbMC = null;
 try {
-  const p = path.join(process.cwd(), "src", "assets", "menu_bg.jpg");
+  const p = path.join(process.cwd(), "src", "assets", "yuzuki", "yuzuki-minecraft.jpg");
   if (fs.existsSync(p)) thumbMC = fs.readFileSync(p);
 } catch (e) {}
 

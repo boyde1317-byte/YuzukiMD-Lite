@@ -2,7 +2,7 @@
 import { createCanvas, loadImage } from "@napi-rs/canvas";
 import fs from "fs";
 import path from "path";
-const ASSET = path.join(process.cwd(), "src/assets/menu_bg.jpg");
+const ASSET = path.join(process.cwd(), "src/assets/yuzuki/yuzuki.png");
 const pluginConfig = {
   name: "gura", alias: ["gurastyle"], category: "canvas",
   description: "Apply Gura-style overlay to your profile picture", usage: ".gura [reply to image]",
