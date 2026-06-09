@@ -561,7 +561,7 @@ export async function handleCommand({ sock, msg, command, args }) {
         ["Prefix",   `\`${prefix}\``],
         ["Mode",     (settings.mode ?? "public").toUpperCase()],
         ["Uptime",   uptime0],
-      ], "Yuzuki MD v2 • Powered by focashi");
+      ], "Yuzuki MD v2 • Powered by @whiskeysockets/baileys v6");
       const payload0 = await previewCard(text0, {
   title: botName0,
   body: `Online ✅  •  Uptime: ${uptime0}`,
