@@ -3,7 +3,7 @@ import { createCanvas, loadImage } from "@napi-rs/canvas";
 import fs from "fs";
 import path from "path";
 import axios from "axios";
-const ASSET_DIR = path.join(process.cwd(), "src/assets/yuzuki");
+// ASSET_DIR removed — all assets now URL-based via src/assets.js
 const BG_URL = "https://raw.githubusercontent.com/uploader762/dat2/main/uploads/52e39f-1773064858080.jpg";
 const FONT_URL = "https://raw.githubusercontent.com/uploader762/dat2/main/uploads/49bbd8-1773045557233.otf";
 const FONT2_URL = "https://raw.githubusercontent.com/uploader762/dat1/main/uploads/203827-1773063086445.ttf";
