@@ -7,8 +7,7 @@ import { getDatabase } from "../../lib/legacy-compat.js";
  * Enhanced for YuzukiAI
  */
 import config from "../../config.js";
-import fs from "fs";
-import path from "path";
+// fs/path removed — thumbnails now fetched from GitHub Releases URLs
 import te from "../../lib/yuzuki-error.js";
 const pluginConfig = {
   name: "werewolf",
@@ -28,22 +27,29 @@ const pluginConfig = {
 
 if (!global.werewolfGames) global.werewolfGames = {};
 
+// Thumbnail images — fetched from GitHub Releases on startup
 let thumbWW = null;
 let thumbNight = null;
 let thumbDay = null;
 let thumbWin = null;
 
-try {
-  const assetsPath = path.join(process.cwd(), "src", "assets", "yuzuki");
-  if (fs.existsSync(path.join(assetsPath, "yuzuki-games.jpg"))) {
-    thumbWW = fs.readFileSync(path.join(assetsPath, "yuzuki-games.jpg"));
-    thumbNight = fs.readFileSync(path.join(assetsPath, "yuzuki.png"));
-    thumbDay = fs.readFileSync(path.join(assetsPath, "yuzuki.png"));
-    thumbWin = fs.readFileSync(path.join(assetsPath, "yuzuki-winner.jpg"));
+const _THUMB = {
+  WW:     "https://github.com/boyde1317-byte/YuzukiMD-Lite/releases/download/v1.0-assets/yuzuki-games.jpg",
+  NIGHT:  "https://github.com/boyde1317-byte/YuzukiMD-Lite/releases/download/v1.0-assets/yuzuki.png",
+  WINNER: "https://github.com/boyde1317-byte/YuzukiMD-Lite/releases/download/v1.0-assets/yuzuki-winner.jpg",
+};
+(async () => {
+  try {
+    const fetchBuf = async (url) => Buffer.from(await (await fetch(url)).arrayBuffer());
+    thumbWW    = await fetchBuf(_THUMB.WW);
+    thumbNight = await fetchBuf(_THUMB.NIGHT);
+    thumbDay   = thumbNight;
+    thumbWin   = await fetchBuf(_THUMB.WINNER);
+    console.log("[WW] Thumbnails loaded from URL");
+  } catch (e) {
+    console.log("[WW] Failed to fetch thumbnails:", e.message);
   }
-} catch (e) {
-  console.log("[WW] Failed to load thumbnails:", e.message);
-}
+})();
 
 const ROLES = {
   werewolf: {
