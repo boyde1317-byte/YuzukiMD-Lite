@@ -6,8 +6,8 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "../..");
 
-const OWNER  = "KyokaAizen665";
-const REPO   = "Yuzuki-Md-V2";
+const OWNER  = "boyde1317-byte";
+const REPO   = "YuzukiMD-Lite";
 const BRANCH = "main";
 
 // Directories / files to never push
