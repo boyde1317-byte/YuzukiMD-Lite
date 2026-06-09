@@ -299,7 +299,7 @@ async function _startBotImpl() {
         return;
       }
       const delay = Math.min(8000 * Math.pow(2, state.pairingAttempts - 1), 60000);
-      logger.error({ err, attempt: state.pairingAttempts, retryInMs: delay }, \`Failed to request pairing code — retrying in \${delay / 1000}s\`);
+      logger.error({ err, attempt: state.pairingAttempts, retryInMs: delay }, "Failed to request pairing code — retrying in " + (delay / 1000) + "s");
       // Close the current socket cleanly so it doesn't linger and block the retry
       try { sock.end(new Error("pairing-failure-cleanup")); } catch {}
       setTimeout(() => startBot().catch(console.error), delay);
