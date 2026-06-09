@@ -1,5 +1,5 @@
 import { nightActionHandler } from './werewolf.js'
-import te from '../../src/lib/yuzuki-error.js'
+import te from "../../lib/yuzuki-error.js"
 const pluginConfig = {
     name: 'wwprotect',
     alias: ['protect', 'guardian', 'wpr'],

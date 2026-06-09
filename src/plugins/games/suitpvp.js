@@ -1,4 +1,4 @@
-import { getDatabase } from '../../src/lib/yuzuki-database.js'
+import { getDatabase } from "../../lib/legacy-compat.js"
 import config from '../../config.js'
 const pluginConfig = {
     name: 'suitpvp',

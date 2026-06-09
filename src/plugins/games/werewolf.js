@@ -1,4 +1,4 @@
-import { getDatabase } from "../../src/lib/yuzuki-database.js";
+import { getDatabase } from "../../lib/legacy-compat.js";
 /**
  * 🐺 WEREWOLF GAME
  * Social deduction game for WhatsApp
@@ -9,7 +9,7 @@ import { getDatabase } from "../../src/lib/yuzuki-database.js";
 import config from "../../config.js";
 import fs from "fs";
 import path from "path";
-import te from "../../src/lib/yuzuki-error.js";
+import te from "../../lib/yuzuki-error.js";
 const pluginConfig = {
   name: "werewolf",
   alias: ["ww", "wwgc"],

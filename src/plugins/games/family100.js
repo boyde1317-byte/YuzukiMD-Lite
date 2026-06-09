@@ -10,9 +10,9 @@ import {
   isSurrender,
   isReplyToGame,
   getRandomReward,
-} from "../../src/lib/yuzuki-game-data.js";
-import { getDatabase } from "../../src/lib/yuzuki-database.js";
-import { addExpWithLevelCheck } from "../../src/lib/yuzuki-level.js";
+} from "../../lib/game-data.js";
+import { getDatabase } from "../../lib/legacy-compat.js";
+import { addExpWithLevelCheck } from "../../lib/legacy-compat.js";
 
 const pluginConfig = {
   name: "family100",

@@ -1,5 +1,5 @@
-import { getDatabase } from '../../src/lib/yuzuki-database.js'
-import { parseMention, delay } from '../../src/lib/yuzuki-utils.js'
+import { getDatabase } from "../../lib/legacy-compat.js"
+import { parseMention, delay } from "../../lib/legacy-compat.js"
 const pluginConfig = {
   name: "tictactoe",
   alias: ["ttt", "xo"],

@@ -238,7 +238,7 @@ export function buildSub(botName, prefix, key) {
   if (!cat) return null;
 
   const cmdLines = cat.commands
-    .map(c => `◦ *${prefix}${cmd}*`)
+    .map(cmd => `◦ *${prefix}${cmd}*`)
     .join("\n");
 
   return (

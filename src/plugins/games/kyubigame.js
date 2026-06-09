@@ -1,6 +1,6 @@
-import { getDatabase } from "../../src/lib/yuzuki-database.js";
-import { addExpWithLevelCheck } from "../../src/lib/yuzuki-level.js";
-import te from "../../src/lib/yuzuki-error.js";
+import { getDatabase } from "../../lib/legacy-compat.js";
+import { addExpWithLevelCheck } from "../../lib/legacy-compat.js";
+import te from "../../lib/yuzuki-error.js";
 
 const pluginConfig = {
     name: "kyubigame",

@@ -127,6 +127,9 @@ async function downloadQuotedMedia(msg, sock) {
 /**
  * Yuzuki-style database wrapper using Yuzuki's database.
  */
+export const delay = (ms) => new Promise(res => setTimeout(res, ms));
+export const parseMention = (text = "") => [...text.matchAll(/@([0-9]{5,16}|0)/g)].map(v => v[1] + "@s.whatsapp.net");
+
 export function getDatabase() {
   const db = loadDB();
 
