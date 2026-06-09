@@ -6,7 +6,7 @@ const {
   useMultiFileAuthState,
   fetchLatestBaileysVersion,
   downloadMediaMessage,
-} = _require("socketon");
+} = _require("@whiskeysockets/baileys");
 import path from "path";
 import readline from "readline";
 import fs from "fs";
