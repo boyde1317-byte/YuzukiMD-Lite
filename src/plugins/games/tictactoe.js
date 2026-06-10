@@ -5,7 +5,7 @@ const pluginConfig = {
   alias: ["ttt", "xo"],
   category: "game",
   description: "Play Tic-Tac-Toe against another player",
-  usage: ".tictactoe [room name] atau .ttt",
+  usage: ".tictactoe [room name] or .ttt",
   example: ".tictactoe",
   isOwner: false,
   isPremium: false,
@@ -165,8 +165,8 @@ async function handler(m, { sock }) {
   if (existingRoom) {
     return safeReply(
       m,
-      `❌ Kamu masih dalam game!\n\n` +
-        `> Selesaikan game kamu atau ketik *nyerah* untuk menyerah.`,
+      `❌ You're still in a game!\n\n` +
+        `> Finish your game or type *surrender* to give up.`,
     );
   }
 
@@ -187,13 +187,13 @@ async function handler(m, { sock }) {
 
     const txt =
       `🎮 *ᴛɪᴄ ᴛᴀᴄ ᴛᴏᴇ*\n\n` +
-      `Partner ditemukan!\n\n` +
+      `Partner found!\n\n` +
       `❌ @${room.game.playerX.split("@")[0]}\n` +
       `⭕ @${room.game.playerO.split("@")[0]}\n\n` +
       `${board}\n\n` +
-      `> Giliran: @${room.game.currentTurn.split("@")[0]}\n` +
-      `> Reply pesan ini dengan angka 1-9\n` +
-      `> Ketik *nyerah* untuk menyerah`;
+      `> Turn: @${room.game.currentTurn.split("@")[0]}\n` +
+      `> Reply to this message with a number 1-9\n` +
+      `> Type *surrender* to give up`;
 
     await safeReact(m, "🎮");
     await safeReply(m, txt, {
@@ -216,9 +216,9 @@ async function handler(m, { sock }) {
     await safeReply(
       m,
       `🎮 *ᴛɪᴄ ᴛᴀᴄ ᴛᴏᴇ*\n\n` +
-        `Room dibuat! Menunggu partner...\n\n` +
-        `> Ketik \`.tictactoe${roomName ? " " + roomName : ""}\` untuk join\n` +
-        `> Room akan expired dalam 5 menit`,
+        `Room created! Waiting for a partner...\n\n` +
+        `> Type \`.tictactoe${roomName ? " " + roomName : ""}\` to join\n` +
+        `> Room expires in 5 minutes`,
     );
 
     // Auto delete after 5 min
@@ -262,9 +262,9 @@ async function answerHandler(m, sock) {
     await safeReact(m, "🏳️");
     await safeReply(
       m,
-      `🏳️ *MENYERAH!*\n\n` +
-        `@${loser.split("@")[0]} menyerah!\n` +
-        `@${winner.split("@")[0]} menang! +Rp 500`,
+      `🏳️ *SURRENDERED!*\n\n` +
+        `@${loser.split("@")[0]} surrendered!\n` +
+        `@${winner.split("@")[0]} wins! +Rp 500`,
       { mentions: [winner, loser] },
     );
 
@@ -314,7 +314,7 @@ async function answerHandler(m, sock) {
       m,
       `🎉 *GAME OVER!*\n\n` +
         `${board}\n\n` +
-        `🏆 @${winner.split("@")[0]} menang! +Rp 1.000`,
+        `🏆 @${winner.split("@")[0]} wins! +Rp 1,000`,
       { mentions: [winner, loser] },
     );
 
@@ -326,7 +326,7 @@ async function answerHandler(m, sock) {
     await safeReact(m, "🤝");
     await safeReply(
       m,
-      `🤝 *SERI!*\n\n` + `${board}\n\n` + `> Tidak ada pemenang!`,
+      `🤝 *TIE!*\n\n` + `${board}\n\n` + `> No winner!`,
       { mentions: [room.game.playerX, room.game.playerO] },
     );
 
@@ -339,7 +339,7 @@ async function answerHandler(m, sock) {
     m,
     `🎮 *ᴛɪᴄ ᴛᴀᴄ ᴛᴏᴇ*\n\n` +
       `${board}\n\n` +
-      `> Giliran: @${room.game.currentTurn.split("@")[0]}`,
+      `> Turn: @${room.game.currentTurn.split("@")[0]}`,
     { mentions: [room.game.currentTurn] },
   );
 
