@@ -24,10 +24,10 @@ const LOCATIONS = [
         name: "🍃 Desa Konoha",
         levelReq: 1,
         monsters: [
-            "Genin Pemula",
-            "Bandit Liar",
-            "Anjing Hutan",
-            "Ninja Pengintai",
+            "Rookie Genin",
+            "Wild Bandit",
+            "Forest Hound",
+            "Scout Ninja",
         ],
         minReward: 100,
         maxReward: 300,
@@ -35,12 +35,12 @@ const LOCATIONS = [
     },
     {
         id: 2,
-        name: "🌳 Hutan Kematian",
+        name: "🌳 Forest of Death",
         levelReq: 5,
         monsters: [
             "Ninja Otogakure",
-            "Harimau Raksasa",
-            "Lipan Racun",
+            "Giant Tiger",
+            "Poison Centipede",
             "Ular Orochimaru",
         ],
         minReward: 250,
@@ -49,13 +49,13 @@ const LOCATIONS = [
     },
     {
         id: 3,
-        name: "☁️ Padang Petir",
+        name: "☁️ Lightning Plains",
         levelReq: 10,
         monsters: [
             "Ninja Kumo",
-            "Samurai Besi",
-            "Burung Hantu Petir",
-            "Serigala Listrik",
+            "Iron Samurai",
+            "Thunder Owl",
+            "Electric Wolf",
         ],
         minReward: 400,
         maxReward: 800,
@@ -66,10 +66,10 @@ const LOCATIONS = [
         name: "🦇 Gua Akatsuki",
         levelReq: 15,
         monsters: [
-            "Klon Zetsu Putih",
-            "Kelelawar Beracun",
+            "White Zetsu Clone",
+            "Poison Bat",
             "Boneka Sasori",
-            "Ninja Pelarian",
+            "Rogue Ninja",
         ],
         minReward: 600,
         maxReward: 1200,
@@ -80,10 +80,10 @@ const LOCATIONS = [
         name: "🌊 Lembah Akhir",
         levelReq: 25,
         monsters: [
-            "Ninja Pembunuh",
+            "Assassin Ninja",
             "Mizukage Klon",
-            "Uchiha Hantu",
-            "Patung Golem",
+            "Ghost Uchiha",
+            "Golem Statue",
         ],
         minReward: 900,
         maxReward: 1700,
@@ -91,13 +91,13 @@ const LOCATIONS = [
     },
     {
         id: 6,
-        name: "💥 Medan Perang Shinobi",
+        name: "💥 Shinobi Battlefield",
         levelReq: 35,
         monsters: [
-            "Zetsu Raksasa",
+            "Giant Zetsu",
             "Edo Tensei Kage",
             "Shinobi Undead",
-            "Pasukan Klon",
+            "Clone Army",
         ],
         minReward: 1300,
         maxReward: 2400,
@@ -108,10 +108,10 @@ const LOCATIONS = [
         name: "🦊 Kurama's Cage",
         levelReq: 50,
         monsters: [
-            "Chakra Ekor Sembilan",
-            "Kyubi Liar",
-            "Kurama Kegelapan",
-            "Roh Bijuu",
+            "Nine-Tails Chakra",
+            "Wild Kyubi",
+            "Dark Kurama",
+            "Bijuu Spirit",
         ],
         minReward: 2500,
         maxReward: 4500,
@@ -150,9 +150,9 @@ async function handler(m, { sock }) {
                 db.save();
             } else {
                 return m.reply(
-                    `⚔️ *MISI SHINOBI MASIH AKTIF*\n\n` +
-                    `Kamu masih berada di medan pertempuran!\n` +
-                    `> Balas pesan terakhir bot dengan (\`serang\` / \`lari\`) atau batalkan misi (ketik \`batal\`).`,
+                    `⚔️ *SHINOBI MISSION STILL ACTIVE*\n\n` +
+                    `You are still in the middle of combat!\n` +
+                    `> Reply to the bot's last message (\`attack\` / \`run\`) or cancel the mission (type \`cancel\`).`,
                 );
             }
         }
@@ -160,7 +160,7 @@ async function handler(m, { sock }) {
         const available = LOCATIONS.filter((d) => userLevel >= d.levelReq);
         if (available.length === 0) {
             return m.reply(
-                `❌ *LEVEL TERLALU RENDAH*\n\n> Level kamu saat ini adalah *${userLevel}*. Kamu butuh minimal level *1* untuk memulai petualangan shinobi.`,
+                `❌ *LEVEL TOO LOW*\n\n> Your current level is *${userLevel}*. You need at least level *1* to begin a shinobi adventure.`,
             );
         }
 
@@ -170,20 +170,20 @@ async function handler(m, { sock }) {
         };
         db.save();
 
-        let txt = `⛩️ *LOBI SHINOBI*\n\n`;
-        txt += `📊 *Statistik Shinobi:*\n`;
+        let txt = `⛩️ *SHINOBI LOBBY*\n\n`;
+        txt += `📊 *Your Shinobi Stats:*\n`;
         txt += `> Level: *${userLevel}*\n`;
         txt += `> Stamina: *${user.rpg.stamina ?? 100}/100*\n\n`;
-        txt += `Pilih lokasi misi yang ingin kamu jelajahi:\n\n`;
+        txt += `Choose a mission location to explore:\n\n`;
 
         for (const d of LOCATIONS) {
             if (userLevel >= d.levelReq) {
                 txt += `🔓 *${d.id}.* ${d.name} (Lv ${d.levelReq}+)\n`;
             } else {
-                txt += `> 🔒 *${d.id}.* ${d.name} (Butuh Lv ${d.levelReq})\n`;
+                txt += `> 🔒 *${d.id}.* ${d.name} (Need Lv ${d.levelReq})\n`;
             }
         }
-        txt += `\n> 💡 Balas pesan ini dengan *angka* lokasi misi (contoh: \`1\`) atau ketik \`batal\` untuk keluar.`;
+        txt += `\n> 💡 Reply with the *number* of a mission location (e.g. \`1\`) or type \`cancel\` to exit.`;
 
         return m.reply(txt);
     } catch (error) {
@@ -206,7 +206,7 @@ async function kyubigameAnswerHandler(m, sock) {
         delete user.rpg.kyubigame_session;
         db.save();
         await m.reply(
-            `⏰ *MISI KEDALUWARSA*\n\n> Sesi misi shinobi kamu sudah hangus karena tidak aktif selama 5 menit.`,
+            `⏰ *MISSION EXPIRED*\n\n> Your shinobi mission session expired due to 5 minutes of inactivity.`,
         );
         return true;
     }
@@ -217,7 +217,7 @@ async function kyubigameAnswerHandler(m, sock) {
     if (text === "batal" || text === "cancel" || text === "keluar") {
         delete user.rpg.kyubigame_session;
         db.save();
-        await m.reply(`🚪 Kamu berhasil membatalkan misi dan kembali ke desa dengan selamat.`);
+        await m.reply(`🚪 You successfully cancelled the mission and returned to the village safely.`);
         return true;
     }
 
@@ -229,14 +229,14 @@ async function kyubigameAnswerHandler(m, sock) {
 
         if (!location) {
             await m.reply(
-                `❌ *MISI TIDAK VALID*\n\n> Lokasi nomor ${choiceId} tidak ada di peta shinobi.`,
+                `❌ *INVALID MISSION*\n\n> Location number ${choiceId} does not exist on the shinobi map.`,
             );
             return true;
         }
 
         if (userLevel < location.levelReq) {
             await m.reply(
-                `🔒 *MISI TERKUNCI*\n\n> Level kamu (*Lv ${userLevel}*) belum cukup untuk memasuki *${location.name}*.\n> Kamu butuh minimal *Lv ${location.levelReq}*.`,
+                `🔒 *MISSION LOCKED*\n\n> Your level (*Lv ${userLevel}*) is not high enough to enter *${location.name}*.\n> You need at least *Lv ${location.levelReq}*.`,
             );
             return true;
         }
@@ -246,10 +246,10 @@ async function kyubigameAnswerHandler(m, sock) {
 
         if (user.rpg.stamina < staminaCost) {
             await m.reply(
-                `⚡ *CHAKRA/STAMINA TIDAK CUKUP*\n\n` +
-                `Kamu butuh setidaknya *${staminaCost} stamina* untuk masuk.\n` +
-                `Sisa stamina kamu saat ini hanya *${user.rpg.stamina}*.\n\n` +
-                `> 💡 *Tips:* Gunakan perintah \`.rest\` atau batalkan dulu (ketik \`batal\`).`,
+                `⚡ *NOT ENOUGH CHAKRA/STAMINA*\n\n` +
+                `You need at least *${staminaCost} stamina* to enter.\n` +
+                `Your remaining stamina is only *${user.rpg.stamina}*.\n\n` +
+                `> 💡 *Tips:* Use the \`.rest\` command or cancel first (type \`cancel\`).`,
             );
             return true;
         }
@@ -275,13 +275,13 @@ async function kyubigameAnswerHandler(m, sock) {
         db.save();
 
         await m.react("⛩️");
-        let txt = `⛩️ *MEMASUKI AREA MISI*\n\n`;
-        txt += `Kamu melompat perlahan menyusuri *${location.name}*...\n`;
-        txt += `> ⚡ Stamina berkurang *${staminaCost}*\n\n`;
-        txt += `Tiba-tiba, seorang *👹 ${monster}* melesat dari kegelapan dan menghadang jalanmu!\n\n`;
-        txt += `*⚔️ APA YANG INGIN KAMU LAKUKAN?*\n`;
-        txt += `> Balas pesan ini dengan \`serang\` untuk melawan\n`;
-        txt += `> Balas pesan ini dengan \`lari\` untuk mundur (berisiko)`;
+        let txt = `⛩️ *ENTERING MISSION AREA*\n\n`;
+        txt += `You leap into the depths of *${location.name}*...\n`;
+        txt += `> ⚡ Stamina reduced by *${staminaCost}*\n\n`;
+        txt += `Suddenly, a *👹 ${monster}* dashes from the shadows and blocks your path!\n\n`;
+        txt += `*⚔️ WHAT WILL YOU DO?*\n`;
+        txt += `> Reply \`attack\` to fight\n`;
+        txt += `> Reply \`run\` to retreat (risky)`;
 
         await m.reply(txt);
         return true;
@@ -318,14 +318,14 @@ async function kyubigameAnswerHandler(m, sock) {
                 user.koin = (user.koin || 0) + ryoReward;
                 await addExpWithLevelCheck(sock, m, db, user, expReward);
 
-                reportText += `🎉 *MISI BERHASIL!*\n\n`;
-                reportText += `Dengan jutsu mematikan, kamu berhasil mengalahkan *${session.monster}*!\n\n`;
-                reportText += `*🎁 HADIAH PENYELESAIAN MISI:*\n`;
+                reportText += `🎉 *MISSION COMPLETE!*\n\n`;
+                reportText += `With a deadly jutsu, you defeated *${session.monster}*!\n\n`;
+                reportText += `*🎁 MISSION REWARDS:*\n`;
                 reportText += `> ✨ EXP: *+${Math.floor(expReward)}*\n`;
                 reportText += `> 💰 Ryo (Koin): *+${ryoReward.toLocaleString()}*\n`;
 
                 if (droppedItems.length > 0) {
-                    reportText += `\n*📦 BARANG JARAHAN SHINOBI:*\n`;
+                    reportText += `\n*📦 SHINOBI LOOT:*\n`;
                     reportText += `> ${droppedItems.join("\n> ")}\n`;
                 }
 
@@ -335,13 +335,13 @@ async function kyubigameAnswerHandler(m, sock) {
                 user.koin = Math.max(0, (user.koin || 0) - ryoLoss);
                 user.rpg.health = Math.max(1, (user.rpg.health || 100) - 40);
 
-                reportText += `💀 *MISI GAGAL!*\n\n`;
-                reportText += `Kekuatanmu belum sebanding! *${session.monster}* memukul mundur dirimu dengan telak.\n`;
-                reportText += `Kamu berhasil menggunakan jutsu substitusi dan merangkak keluar dengan tubuh penuh luka.\n\n`;
-                reportText += `*💔 KERUGIAN:*\n`;
-                reportText += `> 💸 Uang jatuh: *-${ryoLoss.toLocaleString()} Ryo*\n`;
-                reportText += `> ❤️ Darah berkurang: *-40 HP*\n\n`;
-                reportText += `> 💡 *Tips:* Naikan levelmu, makan ramen, atau perkuat jutsumu!`;
+                reportText += `💀 *MISSION FAILED!*\n\n`;
+                reportText += `You were outmatched! *${session.monster}* knocked you back hard.\n`;
+                reportText += `You managed to use a substitution jutsu and crawl out battered and wounded.\n\n`;
+                reportText += `*💔 LOSSES:*\n`;
+                reportText += `> 💸 Ryo dropped: *-${ryoLoss.toLocaleString()} Ryo*\n`;
+                reportText += `> ❤️ Health lost: *-40 HP*\n\n`;
+                reportText += `> 💡 *Tips:* Level up, eat some ramen, or strengthen your jutsu!`;
 
                 await m.react("💀");
             }
@@ -355,15 +355,15 @@ async function kyubigameAnswerHandler(m, sock) {
             let reportText = "";
 
             if (escapeChance) {
-                reportText += `🏃‍♂️ *BERHASIL KABUR!*\n\n`;
-                reportText += `Kamu melemparkan bom asap dan berlari sekuat tenaga. *${session.monster}* kehilangan jejakmu!\n`;
-                reportText += `Kamu selamat tanpa cedera, tapi petualangan ini sia-sia.`;
+                reportText += `🏃‍♂️ *ESCAPED SUCCESSFULLY!*\n\n`;
+                reportText += `You threw a smoke bomb and fled at full speed. *${session.monster}* lost your trail!\n`;
+                reportText += `You escaped unharmed, but the mission was in vain.`;
                 await m.react("💨");
             } else {
                 const hpLoss = 25;
                 user.rpg.health = Math.max(1, (user.rpg.health || 100) - hpLoss);
-                reportText += `💥 *GAGAL KABUR!*\n\n`;
-                reportText += `Kakimu tersandung jebakan ninja! *${session.monster}* mengejarmu dan mendaratkan serangannya di tubuhmu!\n\n`;
+                reportText += `💥 *ESCAPE FAILED!*\n\n`;
+                reportText += `You tripped on a ninja trap! *${session.monster}* chased you down and landed a blow!\n\n`;
                 reportText += `*💔 KERUGIAN:*\n`;
                 reportText += `> ❤️ Darah berkurang: *-${hpLoss} HP*`;
                 await m.react("🩸");
@@ -375,10 +375,10 @@ async function kyubigameAnswerHandler(m, sock) {
             return true;
         } else {
             await m.reply(
-                `❓ *PERINTAH TIDAK DIKENAL*\n\n` +
-                `> Balas dengan \`serang\` untuk melawan musuh.\n` +
-                `> Balas dengan \`lari\` untuk kabur.\n` +
-                `> Balas dengan \`batal\` jika ingin membatalkan misi.`,
+                `❓ *UNKNOWN COMMAND*\n\n` +
+                `> Reply \`attack\` to fight the enemy.\n` +
+                `> Reply \`run\` to flee.\n` +
+                `> Reply \`cancel\` to cancel the mission.`,
             );
             return true;
         }
