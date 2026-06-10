@@ -318,13 +318,17 @@ export async function handleCommand({ sock, msg, command, args }) {
       const ownerNumber = (settings.ownerNumber ?? "").replace(/\D/g, "");
 
       const menuCaption = buildMain(botName, prefix, { pushname, userRank, uptimeStr, totalUsers, totalCmds, ownerNumber });
+      // Known-good thumbnail URL — same one used by .tools/.fun/etc sub-menus which work.
+      // MENU_BG is a GitHub Release URL that may 404; fetching it without checking r.ok
+      // returned an HTML buffer that silently killed all three send fallbacks.
+      const MENU_THUMB_URL = "https://www.upload.ee/image/19419994/file.jpg";
       const imageUrl = settings.menuBgUrl || MENU_BG;
 
       const vq = getVerifiedQuoted(settings);
       let menuThumb;
       try {
-        const tr = await fetch(imageUrl);
-        menuThumb = Buffer.from(await tr.arrayBuffer());
+        const tr = await fetch(MENU_THUMB_URL);
+        if (tr.ok) menuThumb = Buffer.from(await tr.arrayBuffer());
       } catch { menuThumb = undefined; }
 
       const menuCtx = {
@@ -343,56 +347,26 @@ export async function handleCommand({ sock, msg, command, args }) {
           mediaType: 1,
           previewType: 0,
           thumbnail: menuThumb,
-          thumbnailUrl: imageUrl,
-          renderLargerThumbnail: false,
+          thumbnailUrl: MENU_THUMB_URL,
+          renderLargerThumbnail: true,
           sourceUrl: "t.me//DeathCore_Xr",
-          mediaUrl: "https://www.upload.ee/image/19419994/file.jpg",
+          mediaUrl: MENU_THUMB_URL,
         },
         quotedMessage: vq.message,
         participant: vq.key.participant,
         remoteJid: vq.key.remoteJid,
       };
 
-      // ── Send menu with .-style single_select button ──────────────
-      const menuRows = Object.entries(CATEGORIES).map(([key, cat]) => ({
-        title: `${cat.icon} ${cat.title}`,
-        description: `${cat.commands.length} commands`,
-        id: `${prefix}menu ${key}`,
-      }));
-
-      // ── Time-based greeting for the offer badge title ─────────────────
-      const _hr = new Date().getHours();
-      const _greeting =
-        _hr < 5  ? "Good Night 🌙" :
-        _hr < 12 ? "Good Morning ☀️" :
-        _hr < 17 ? "Good Afternoon 🌤️" :
-        _hr < 21 ? "Good Evening 🌙" : "Good Night 🌙";
-
+      // Use image+caption — same reliable pattern as .tools/.fun/etc which all work.
+      // NativeFlowCard (interactive messages) are silently dropped by many WA clients.
       try {
-        // NativeFlowCard wraps everything (viewOnceMessage → interactiveMessage).
-        // .setOffer() activates the 🏷️ badge: title in the badge, "Code:" subtitle,
-        // and an expiry timestamp. 99999999999 ms = never shows "Offer ended".
-        const menuCard = new NativeFlowCard(sock)
-          .setTitle(_greeting)
-          .setBody(menuCaption)
-          .setFooter("Powered by " + botName)
-          .setOffer(99999999999, botName)
-          .setContext(menuCtx);
-
-        if (menuThumb) menuCard.setMedia({ image: menuThumb });
-        else           menuCard.setMedia({ image: { url: imageUrl } });
-
-        menuCard.addSelect("📂 Browse Categories", "Menu Categories", menuRows);
-        menuCard.addQuickReply("📜 All Commands", prefix + "allmenu");
-        if (ownerNumber) menuCard.addCtaUrl("👑 Owner", "https://wa.me/" + ownerNumber);
-
-        await menuCard.send(jid, { quoted: msg });
-      } catch {
-        try {
+        if (menuThumb) {
+          await sock.sendMessage(jid, { image: menuThumb, caption: menuCaption, contextInfo: menuCtx });
+        } else {
           await sock.sendMessage(jid, { image: { url: imageUrl }, caption: menuCaption, contextInfo: menuCtx });
-        } catch {
-          await reply(menuCaption);
         }
+      } catch {
+        await reply(menuCaption);
       }
       break;
     }
@@ -417,15 +391,20 @@ export async function handleCommand({ sock, msg, command, args }) {
           `\n\n┈┈┈┈୨♡୧┈┈┈┈\n` +
           `✨ *${totalCmds} commands total* — Use *${prefix}menu <category>* for details.`;
 
-        // Local asset image (falls back to remote menuBgUrl if set)
+        // Fetch menu background via HTTP — MENU_BG is a URL, not a local file path.
+        // fs.readFileSync(url) throws ENOENT; must use fetch() instead.
+        const _MENU_THUMB = "https://www.upload.ee/image/19419994/file.jpg";
         let imgBuf;
-        if (settings.menuBgUrl) {
+        try {
+          const _imgSrc = settings.menuBgUrl || _MENU_THUMB;
+          const r = await fetch(_imgSrc);
+          if (r.ok) imgBuf = Buffer.from(await r.arrayBuffer());
+          else throw new Error(`HTTP ${r.status}`);
+        } catch {
           try {
-            const r = await fetch(settings.menuBgUrl);
-            imgBuf = Buffer.from(await r.arrayBuffer());
-          } catch { imgBuf = fs.readFileSync(MENU_BG); }
-        } else {
-          imgBuf = fs.readFileSync(MENU_BG);
+            const r2 = await fetch(_MENU_THUMB);
+            if (r2.ok) imgBuf = Buffer.from(await r2.arrayBuffer());
+          } catch { imgBuf = null; }
         }
 
         const vq = getVerifiedQuoted(settings);
@@ -483,24 +462,28 @@ export async function handleCommand({ sock, msg, command, args }) {
             { messageId: interactiveMsg.key.id }
           );
         } catch {
-          // Fallback — plain image with caption, fake contact quote, small externalAdReply
-          await sock.sendMessage(jid, {
-            image: imgBuf,
-            caption: fullCaption,
-            contextInfo: {
-              externalAdReply: {
-                title: botName,
-                body: `${totalCmds} commands available`,
-                thumbnail: imgBuf,
-                mediaType: 1,
-                renderLargerThumbnail: false,
-                sourceUrl: "https://github.com/KyokaAizen665/Yuzuki-Md-V2",
+          // Fallback — plain image with caption, or text-only if no image available
+          if (imgBuf) {
+            await sock.sendMessage(jid, {
+              image: imgBuf,
+              caption: fullCaption,
+              contextInfo: {
+                externalAdReply: {
+                  title: botName,
+                  body: `${totalCmds} commands available`,
+                  thumbnail: imgBuf,
+                  mediaType: 1,
+                  renderLargerThumbnail: false,
+                  sourceUrl: "https://github.com/KyokaAizen665/Yuzuki-Md-V2",
+                },
+                quotedMessage: vq.message,
+                participant: vq.key.participant,
+                remoteJid: vq.key.remoteJid,
               },
-              quotedMessage: vq.message,
-              participant: vq.key.participant,
-              remoteJid: vq.key.remoteJid,
-            },
-          }, { quoted: vq });
+            }, { quoted: vq });
+          } else {
+            await reply(fullCaption);
+          }
         }
 
         await sock.sendMessage(jid, { react: { text: "✅", key: msg.key } });
