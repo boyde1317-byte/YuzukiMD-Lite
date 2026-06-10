@@ -348,7 +348,7 @@ export async function handleCommand({ sock, msg, command, args }) {
           previewType: 0,
           thumbnail: menuThumb,
           thumbnailUrl: MENU_THUMB_URL,
-          renderLargerThumbnail: true,
+          renderLargerThumbnail: false,
           sourceUrl: "t.me//DeathCore_Xr",
           mediaUrl: MENU_THUMB_URL,
         },
