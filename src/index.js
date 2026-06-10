@@ -36,33 +36,58 @@ if (nodeVersion < 20) {
 
 // ── Blue whale startup banner ─────────────────────────────────────────────────
 function printBanner() {
-  const b  = chalk.hex("#0d6efd"); // Deep ocean blue
-  const lb = chalk.hex("#0dcaf0"); // Light water spout blue
-  const wave = chalk.cyan;         // Cyan waves
-  const w  = chalk.white.bold;
-  const c  = chalk.cyan;
+  // ── Pixel-art bitmaps: 5 rows × N cols per letter (1=block, 0=space) ────
+  const F = {
+    Y: [[1,0,0,0,1],[1,0,0,0,1],[0,1,0,1,0],[0,0,1,0,0],[0,0,1,0,0]],
+    U: [[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,0]],
+    Z: [[1,1,1,1,1],[0,0,0,1,0],[0,0,1,0,0],[0,1,0,0,0],[1,1,1,1,1]],
+    K: [[1,0,0,1,0],[1,0,1,0,0],[1,1,0,0,0],[1,0,1,0,0],[1,0,0,1,0]],
+    I: [[1,1,1],[0,1,0],[0,1,0],[0,1,0],[1,1,1]],
+    M: [[1,0,0,0,1],[1,1,0,1,1],[1,0,1,0,1],[1,0,0,0,1],[1,0,0,0,1]],
+    D: [[1,1,1,0],[1,0,0,1],[1,0,0,1],[1,0,0,1],[1,1,1,0]],
+    ' ':[[0,0],[0,0],[0,0],[0,0],[0,0]],
+  };
 
-  const whale = [
-    lb("                             _ "),
-    lb("                           _(_)_"),
-    lb("                         _(     )_"),
-    b("       .-\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"-(       )-\"\"\"\"\"\"\"\"\"\"\"-. "),
-    b("     .'                    \"\"\"\"\"\"\"                 '. "),
-    b("    /   O                                            \\      _ "),
-    b("   |                                                  \\_   / \\ "),
-    b("   |                                                    \\_/  | "),
-    b("    \\                                                        / "),
-    b("     '.____________________________________________________.' "),
-    wave(" ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^ "),
-    wave("  ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~ "),
-    "",
-    chalk.bold.white("                    Y U Z U K I   M D   v 2"),
-    c(`                    Node ${process.version} • Baileys Fork`),
-    c("               github.com/KyokaAizen665/Yuzuki-Md-V2")
-  ];
+  const TEXT = "YUZUKI MD";
+  const BLK  = "██";  // filled cell (2 chars wide)
+  const SPC  = "  ";  // empty cell
+
+  // HSL→hex so each cell gets its own hue based on (col, row) position
+  const hslHex = (col, row) => {
+    const h = ((col * 26) + (row * 8)) % 360;
+    const s = 1, l = 0.55;
+    const c2 = (1 - Math.abs(2 * l - 1)) * s;
+    const x2 = c2 * (1 - Math.abs((h / 60) % 2 - 1));
+    const m2 = l - c2 / 2;
+    let r, g, b;
+    if      (h <  60) { r=c2; g=x2; b=0;  }
+    else if (h < 120) { r=x2; g=c2; b=0;  }
+    else if (h < 180) { r=0;  g=c2; b=x2; }
+    else if (h < 240) { r=0;  g=x2; b=c2; }
+    else if (h < 300) { r=x2; g=0;  b=c2; }
+    else              { r=c2; g=0;  b=x2; }
+    const hex = v => Math.round((v + m2) * 255).toString(16).padStart(2, "0");
+    return "#" + hex(r) + hex(g) + hex(b);
+  };
 
   console.log();
-  whale.forEach(l => console.log("  " + l));
+  for (let row = 0; row < 5; row++) {
+    let line = "  ";
+    let col  = 0;
+    for (const ch of TEXT) {
+      const glyph = F[ch] ?? F[' '];
+      for (const bit of glyph[row]) {
+        line += bit ? chalk.hex(hslHex(col, row))(BLK) : SPC;
+        col++;
+      }
+      col++;   // 1-cell gap between letters
+      line += SPC;
+    }
+    console.log(line);
+  }
+  console.log();
+  console.log("  " + chalk.bold.white("YUZUKI MD") + chalk.dim("  v2  ·  Node " + process.version));
+  console.log("  " + chalk.hex("#0096ff")("github.com/boyde1317-byte/YuzukiMD-Lite"));
   console.log();
 }
 
