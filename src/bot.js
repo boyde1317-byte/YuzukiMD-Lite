@@ -258,11 +258,15 @@ async function _startBotImpl() {
     // FIX: The flat 3s delay is unreliable on slow/shared hosting servers.
     // Wait for the socket to signal "connecting" before requesting the pairing
     // code — this is event-driven and works regardless of server speed.
-    await new Promise((resolve, reject) => {
-      const _pairingTimeout = setTimeout(
-        () => reject(new Error('WS connect timeout after 30s')),
-        30000
-      );
+    await new Promise((resolve) => {
+      // 90 s — Pterodactyl / shared hosts can be slow to reach WA servers.
+      // On timeout we resolve (not reject) so the bot keeps running instead of
+      // crashing; Baileys usually completes the handshake in the background.
+      const _pairingTimeout = setTimeout(() => {
+        sock.ev.off('connection.update', _onConnUpdate);
+        logger.warn('WS connect timeout after 90s — proceeding with pairing code request anyway');
+        resolve();
+      }, 90000);
       function _onConnUpdate({ connection }) {
         if (connection === 'connecting' || connection === 'open') {
           clearTimeout(_pairingTimeout);
