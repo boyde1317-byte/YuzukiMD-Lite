@@ -2,10 +2,12 @@ import { games } from '../../lib/games.js'
 
 games.register('tebakjkt48', {
     alias: ['jkt48', 'jkt'],
-    emoji: '🎀',
-    title: 'TEBAK JKT48',
-    description: 'Tebak member JKT48',
-    hasImage: true
+    emoji: '🎮',
+    title: 'GUESS THE JKT48 MEMBER',
+    description: 'Identify the JKT48 member from the photo',
+    hasImage: true,
+    imageField: 'img',
+    questionField: 'prompt',
 })
 
 const { config: pluginConfig, handler, answerHandler } = games.createPlugin('tebakjkt48')

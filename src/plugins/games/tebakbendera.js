@@ -2,12 +2,13 @@ import { games } from '../../lib/games.js'
 
 games.register('tebakbendera', {
     alias: ['tbendera', 'flag'],
-    emoji: '🏳️',
-    title: 'TEBAK BENDERA',
-    description: 'Tebak negara dari bendera',
-    dataFile: 'tebakbendera2.json',
+    emoji: '🎮',
+    title: 'GUESS THE FLAG',
+    description: 'Identify the country from its flag',
+    hasImage: true,
+    imageField: 'img',
+    questionField: 'name',
     answerField: 'name',
-    hasImage: true
 })
 
 const { config: pluginConfig, handler, answerHandler } = games.createPlugin('tebakbendera')

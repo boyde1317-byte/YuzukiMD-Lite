@@ -4,7 +4,7 @@ const pluginConfig = {
   name: "tictactoe",
   alias: ["ttt", "xo"],
   category: "game",
-  description: "Main TicTacToe dengan player lain",
+  description: "Play Tic-Tac-Toe against another player",
   usage: ".tictactoe [room name] atau .ttt",
   example: ".tictactoe",
   isOwner: false,

@@ -6,7 +6,7 @@ const pluginConfig = {
     name: "kyubigame",
     alias: ["kyubi", "naruto", "shinobi"],
     category: "game",
-    description: "Jelajahi dunia shinobi dan hadapi musuh Ninja terkuat",
+    description: "Explore the shinobi world and face the strongest ninja enemies",
     usage: ".kyubigame",
     example: ".kyubigame",
     isOwner: false,

@@ -13,7 +13,7 @@ const pluginConfig = {
   name: "werewolf",
   alias: ["ww", "wwgc"],
   category: "game",
-  description: "Main Werewolf Game bersama player lain",
+  description: "Play Werewolf social deduction game with other players",
   usage: ".ww <create|join|start|vote|player|exit|delete>",
   example: ".ww create",
   isOwner: false,

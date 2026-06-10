@@ -2,13 +2,12 @@ import { games } from '../../lib/games.js'
 
 games.register('tebakgambar', {
     alias: ['tg', 'guessimage'],
-    emoji: '🖼️',
-    title: 'TEBAK GAMBAR',
-    description: 'Tebak kata dari gambar',
-    timeout: 90000,
+    emoji: '🎮',
+    title: 'GUESS THE IMAGE',
+    description: 'Look at the image and guess the word or phrase',
     hasImage: true,
-    questionField: null,
-    hintCount: 3
+    imageField: 'img',
+    questionField: 'deskripsi',
 })
 
 const { config: pluginConfig, handler, answerHandler } = games.createPlugin('tebakgambar')

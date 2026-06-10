@@ -2,10 +2,12 @@ import { games } from '../../lib/games.js'
 
 games.register('tebakmakanan', {
     alias: ['makanan', 'food'],
-    emoji: '🍲',
-    title: 'TEBAK MAKANAN',
-    description: 'Tebak nama makanan',
-    hasImage: true
+    emoji: '🎮',
+    title: 'GUESS THE FOOD',
+    description: 'Identify the traditional food from the image',
+    hasImage: true,
+    imageField: 'img',
+    questionField: 'deskripsi',
 })
 
 const { config: pluginConfig, handler, answerHandler } = games.createPlugin('tebakmakanan')

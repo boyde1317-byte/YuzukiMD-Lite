@@ -2,9 +2,9 @@ import { games } from '../../lib/games.js'
 
 games.register('tebakhewan', {
     alias: ['th', 'guessanimal'],
-    emoji: '🐾',
-    title: 'TEBAK HEWAN',
-    description: 'Tebak nama hewan',
+    emoji: '🎮',
+    title: 'GUESS THE ANIMAL',
+    description: 'Read the description and name the animal',
 })
 
 const { config: pluginConfig, handler, answerHandler } = games.createPlugin('tebakhewan')

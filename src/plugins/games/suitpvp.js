@@ -4,7 +4,7 @@ const pluginConfig = {
     name: 'suitpvp',
     alias: ['suit', 'rps', 'janken'],
     category: 'game',
-    description: 'Main suit (batu gunting kertas) dengan player lain',
+    description: 'Play Rock Paper Scissors against another player',
     usage: '.suit @tag',
     example: '.suit @628xxx',
     isOwner: false,

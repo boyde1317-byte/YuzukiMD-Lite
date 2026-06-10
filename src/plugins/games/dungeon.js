@@ -6,7 +6,7 @@ const pluginConfig = {
     name: "dungeon",
     alias: ["dg", "explore", "labirin"],
     category: "game",
-    description: "Jelajahi dungeon dan lawan monster secara interaktif",
+    description: "Explore the dungeon and fight monsters interactively",
     usage: ".dungeon",
     example: ".dungeon",
     isOwner: false,

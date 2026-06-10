@@ -2,9 +2,9 @@ import { games } from '../../lib/games.js'
 
 games.register('kataacak', {
     alias: ['ka', 'acakkata'],
-    emoji: '🔤',
-    title: 'KATA ACAK',
-    description: 'Susun huruf acak'
+    emoji: '🎮',
+    title: 'WORD SCRAMBLE',
+    description: 'Unscramble the letters to find the hidden word',
 })
 
 const { config: pluginConfig, handler, answerHandler } = games.createPlugin('kataacak')

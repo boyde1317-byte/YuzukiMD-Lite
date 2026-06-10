@@ -2,9 +2,9 @@ import { games } from '../../lib/games.js'
 
 games.register('tebakfilm', {
     alias: ['tf', 'guessmovie'],
-    emoji: '🎬',
-    title: 'TEBAK FILM',
-    description: 'Tebak judul film'
+    emoji: '🎮',
+    title: 'GUESS THE MOVIE',
+    description: 'Read the clue and guess the movie title',
 })
 
 const { config: pluginConfig, handler, answerHandler } = games.createPlugin('tebakfilm')

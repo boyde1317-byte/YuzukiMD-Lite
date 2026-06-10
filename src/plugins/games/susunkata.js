@@ -2,9 +2,9 @@ import { games } from '../../lib/games.js'
 
 games.register('susunkata', {
     alias: ['susun', 'scramble'],
-    emoji: '🔠',
-    title: 'SUSUN KATA',
-    description: 'Susun kata dari huruf'
+    emoji: '🎮',
+    title: 'WORD UNSCRAMBLE',
+    description: 'Rearrange the letters to form the correct word',
 })
 
 const { config: pluginConfig, handler, answerHandler } = games.createPlugin('susunkata')

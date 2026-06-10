@@ -1,10 +1,10 @@
 import { games } from '../../lib/games.js'
 
 games.register('tebaklirik', {
-    alias: [],
-    emoji: '🎤',
-    title: 'TEBAK LIRIK',
-    description: 'Tebak lirik lagu'
+    alias: ['tlirik', 'lyrics'],
+    emoji: '🎮',
+    title: 'FILL THE LYRIC',
+    description: 'Fill in the missing word from the song lyric',
 })
 
 const { config: pluginConfig, handler, answerHandler } = games.createPlugin('tebaklirik')

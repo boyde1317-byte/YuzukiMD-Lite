@@ -1,10 +1,10 @@
 import { games } from '../../lib/games.js'
 
 games.register('tebakkalimat', {
-    alias: ['tkl', 'peribahasa'],
-    emoji: '📖',
-    title: 'TEBAK KALIMAT',
-    description: 'Tebak kalimat atau peribahasa'
+    alias: ['tkl', 'idiom'],
+    emoji: '🎮',
+    title: 'COMPLETE THE IDIOM',
+    description: 'Fill in the missing word to complete the English idiom or proverb',
 })
 
 const { config: pluginConfig, handler, answerHandler } = games.createPlugin('tebakkalimat')

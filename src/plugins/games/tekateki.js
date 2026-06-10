@@ -2,9 +2,9 @@ import { games } from '../../lib/games.js'
 
 games.register('tekateki', {
     alias: ['teka'],
-    emoji: '🧩',
-    title: 'TEKA-TEKI',
-    description: 'Game teka-teki tradisional'
+    emoji: '🎮',
+    title: 'RIDDLE QUIZ',
+    description: 'Traditional-style riddles and trick questions',
 })
 
 const { config: pluginConfig, handler, answerHandler } = games.createPlugin('tekateki')
