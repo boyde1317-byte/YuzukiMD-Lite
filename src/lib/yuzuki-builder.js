@@ -49,6 +49,7 @@ export class NativeFlowCard {
     this._contextInfo = {};
     this._extraPayload = {};
     this._params = {};
+    this._copyCode = "";         // offer badge copy code
   }
 
   setTitle(v) { this._title = v; return this; }
@@ -58,6 +59,19 @@ export class NativeFlowCard {
   setMedia(obj) { this._data = obj; return this; }
   setContext(obj) { this._contextInfo = { ...this._contextInfo, ...obj }; return this; }
   setExtra(obj) { this._extraPayload = { ...this._extraPayload, ...obj }; return this; }
+
+  /**
+   * Activate the WhatsApp offer badge (the 🏷️ tag icon with expiry date and copy code).
+   * Sets messageParamsJson so WhatsApp renders the offer frame around the header.
+   * @param {number} [durationMs]  How long before it shows "Offer ended". Default = never.
+   * @param {string} [copyCode]    Text shown as "Code: <copyCode>" inside the badge.
+   */
+  setOffer(durationMs = 99999999999, copyCode = "") {
+    const nowSec = Math.floor(Date.now() / 1000);
+    this._params = { from: nowSec, to: nowSec + Math.floor(durationMs / 1000) };
+    if (copyCode) this._copyCode = copyCode;
+    return this;
+  }
 
   /**
    * Add a CTA URL button
@@ -130,7 +144,7 @@ export class NativeFlowCard {
     return {
       header: {
         title: this._title,
-        subtitle: this._subtitle,
+        subtitle: this._copyCode || this._subtitle,
         hasMediaAttachment: !!this._data,
         ...(this._data
           ? await prepareWAMessageMedia(this._data, {
