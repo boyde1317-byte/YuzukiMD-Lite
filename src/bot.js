@@ -6,6 +6,7 @@ const {
   useMultiFileAuthState,
   fetchLatestBaileysVersion,
   downloadMediaMessage,
+  Browsers,
 } = _require("@whiskeysockets/baileys");
 import path from "path";
 import readline from "readline";
@@ -199,7 +200,7 @@ async function _startBotImpl() {
     logger: silentLogger,
     syncFullHistory: false,
     markOnlineOnConnect: true,
-    browser: ["Android", "Chrome", "114.0.5735.196"],
+    browser: Browsers.ubuntu("Chrome"),
     patchMessageBeforeSending: (message) => {
       const requiresPatch = !!(
         message.buttonsMessage ||
@@ -253,15 +254,24 @@ async function _startBotImpl() {
     setSetting("ownerNumber", phoneNumber);
     logger.info({ phoneNumber }, "ownerNumber saved to settings.json");
 
-    // ── Pairing code — direct approach (no "connecting" event wait) ──────────
-    // Root cause of the race condition: makeWASocket() fires connection:"connecting"
-    // almost immediately, BEFORE the event listener below can be registered.
-    // The listener misses it, waits until timeout, and loops forever.
-    //
-    // Fix: give Baileys 3 s to initialise its WS, then call requestPairingCode()
-    // directly.  Baileys v6 queues the request internally and handles WS state
-    // itself — no manual "connecting" wait needed.
-    await new Promise(r => setTimeout(r, 3000));
+    // ── Pairing code — wait for WS to reach connecting state ──────────────
+    // FIX: The flat 3s delay is unreliable on slow/shared hosting servers.
+    // Wait for the socket to signal "connecting" before requesting the pairing
+    // code — this is event-driven and works regardless of server speed.
+    await new Promise((resolve, reject) => {
+      const _pairingTimeout = setTimeout(
+        () => reject(new Error('WS connect timeout after 30s')),
+        30000
+      );
+      function _onConnUpdate({ connection }) {
+        if (connection === 'connecting' || connection === 'open') {
+          clearTimeout(_pairingTimeout);
+          sock.ev.off('connection.update', _onConnUpdate);
+          setTimeout(resolve, 1500); // small buffer after connecting state
+        }
+      }
+      sock.ev.on('connection.update', _onConnUpdate);
+    });
 
     let pairingCode = null;
     const MAX_PAIRING_ATTEMPTS = 5;
