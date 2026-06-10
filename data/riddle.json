@@ -1,32 +1,122 @@
 [
-  {"soal": "Semakin kamu ambil, semakin banyak yang tertinggal. Apa itu?", "jawaban": "Langkah Kaki"},
-  {"soal": "Punya leher tapi tidak punya kepala. Apa itu?", "jawaban": "Botol"},
-  {"soal": "Bisa berjalan tanpa kaki, bisa menangis tanpa mata. Apa itu?", "jawaban": "Awan"},
-  {"soal": "Semakin tinggi, semakin kecil ukurannya. Apa itu?", "jawaban": "Lilin"},
-  {"soal": "Punya banyak gigi tapi tidak bisa menggigit. Apa itu?", "jawaban": "Sisir"},
-  {"soal": "Selalu datang tapi tidak pernah sampai. Apa itu?", "jawaban": "Besok"},
-  {"soal": "Bisa dipecahkan tanpa dipegang. Apa itu?", "jawaban": "Janji"},
-  {"soal": "Punya mata tapi tidak bisa melihat. Apa itu?", "jawaban": "Jarum"},
-  {"soal": "Semakin kering semakin basah. Apa itu?", "jawaban": "Handuk"},
-  {"soal": "Bisa terbang tanpa sayap, bisa menangis tanpa mata. Apa itu?", "jawaban": "Awan"},
-  {"soal": "Punya daun tapi bukan pohon, punya akar tapi bukan tanaman. Apa itu?", "jawaban": "Kata"},
-  {"soal": "Punya cincin tapi bukan perhiasan, digunakan untuk memasak. Apa itu?", "jawaban": "Kompor"},
-  {"soal": "Bisa berjalan tapi tidak punya kaki, bisa berbicara tapi tidak punya mulut. Apa itu?", "jawaban": "Jam"},
-  {"soal": "Semakin kau kejar semakin menjauh, tapi kalau kau berhenti dia menghampirimu. Apa itu?", "jawaban": "Bayangan"},
-  {"soal": "Punya banyak kunci tapi tidak bisa membuka pintu. Apa itu?", "jawaban": "Piano"},
-  {"soal": "Yang membuatnya tidak membutuhkannya, yang membelinya tidak memakainya. Apa itu?", "jawaban": "Peti Mati"},
-  {"soal": "Kalau dimasukkan ke air tidak basah. Apa itu?", "jawaban": "Bayangan"},
-  {"soal": "Aku punya kota tapi tidak ada gedung, punya hutan tapi tidak ada pohon. Apa itu?", "jawaban": "Peta"},
-  {"soal": "Bisa naik tapi tidak bisa turun. Apa itu?", "jawaban": "Umur"},
-  {"soal": "Punya kepala dan ekor tapi tidak punya badan. Apa itu?", "jawaban": "Koin"},
-  {"soal": "Semakin panjang semakin pendek umurnya. Apa itu?", "jawaban": "Lilin"},
-  {"soal": "Aku ada di depanmu tapi kamu tidak bisa melihatku. Apa itu?", "jawaban": "Masa Depan"},
-  {"soal": "Punya mulut tapi tidak bisa berbicara, punya tempat tidur tapi tidak pernah tidur. Apa itu?", "jawaban": "Sungai"},
-  {"soal": "Bisa menelan manusia tapi bisa dimasukkan ke saku. Apa itu?", "jawaban": "Lubang"},
-  {"soal": "Aku milikmu tapi orang lain lebih sering memakainya. Apa itu?", "jawaban": "Nama"},
-  {"soal": "Punya tangan tapi tidak bisa bertepuk. Apa itu?", "jawaban": "Jam"},
-  {"soal": "Kalau tidak ada aku, tidak ada yang bisa hidup, tapi banyak yang mati karenaku. Apa itu?", "jawaban": "Air"},
-  {"soal": "Ringan seperti bulu tapi orang terkuat sekalipun tidak bisa menahan lama. Apa itu?", "jawaban": "Nafas"},
-  {"soal": "Punya banyak huruf tapi hanya berisi satu kata. Apa itu?", "jawaban": "Kamus"},
-  {"soal": "Punya kulit tapi bukan hewan, punya daun tapi bukan tanaman. Apa itu?", "jawaban": "Buku"}
+  {
+    "soal": "The more you take, the more you leave behind. What is it?",
+    "jawaban": "Footsteps"
+  },
+  {
+    "soal": "Has a neck but no head. What is it?",
+    "jawaban": "A bottle"
+  },
+  {
+    "soal": "Can travel around the world while staying in a corner. What is it?",
+    "jawaban": "A stamp"
+  },
+  {
+    "soal": "Has teeth but cannot bite. What is it?",
+    "jawaban": "A comb"
+  },
+  {
+    "soal": "Always in front of you but cannot be seen. What is it?",
+    "jawaban": "The future"
+  },
+  {
+    "soal": "Can be broken without being touched. What is it?",
+    "jawaban": "A promise"
+  },
+  {
+    "soal": "Has hands but cannot clap. What is it?",
+    "jawaban": "A clock"
+  },
+  {
+    "soal": "Gets wetter the more it dries. What is it?",
+    "jawaban": "A towel"
+  },
+  {
+    "soal": "Has an eye but cannot see. What is it?",
+    "jawaban": "A needle"
+  },
+  {
+    "soal": "Has keys but no locks, space but no room. What is it?",
+    "jawaban": "A keyboard"
+  },
+  {
+    "soal": "I speak without a mouth and hear without ears. What am I?",
+    "jawaban": "An echo"
+  },
+  {
+    "soal": "The more you feed it the bigger it grows; give it water and it dies. What is it?",
+    "jawaban": "Fire"
+  },
+  {
+    "soal": "Has cities but no houses, mountains but no trees, water but no fish. What is it?",
+    "jawaban": "A map"
+  },
+  {
+    "soal": "Runs but has no legs. What is it?",
+    "jawaban": "A river"
+  },
+  {
+    "soal": "What has one head, one foot, and four legs?",
+    "jawaban": "A bed"
+  },
+  {
+    "soal": "The person who makes it does not need it. The person who buys it does not use it. The person who uses it does not know it. What is it?",
+    "jawaban": "A coffin"
+  },
+  {
+    "soal": "If you drop me I will crack, but smile at me and I will smile back. What am I?",
+    "jawaban": "A mirror"
+  },
+  {
+    "soal": "Full of holes but still holds water. What is it?",
+    "jawaban": "A sponge"
+  },
+  {
+    "soal": "The harder you hit it the bigger it gets. What is it?",
+    "jawaban": "A bruise"
+  },
+  {
+    "soal": "Has a thumb and four fingers but is not alive. What is it?",
+    "jawaban": "A glove"
+  },
+  {
+    "soal": "Light as a feather, yet even the strongest person cannot hold it for more than a few minutes. What is it?",
+    "jawaban": "Breath"
+  },
+  {
+    "soal": "Goes up but never comes down. What is it?",
+    "jawaban": "Age"
+  },
+  {
+    "soal": "Has a head and a tail but no body. What is it?",
+    "jawaban": "A coin"
+  },
+  {
+    "soal": "What is so fragile that even saying its name breaks it?",
+    "jawaban": "Silence"
+  },
+  {
+    "soal": "Has words but never speaks. What is it?",
+    "jawaban": "A book"
+  },
+  {
+    "soal": "Three lives have I. Gentle enough to soothe the skin, light enough to caress the sky, hard enough to crack rocks. What am I?",
+    "jawaban": "Water"
+  },
+  {
+    "soal": "The more you have of it, the less you see. What is it?",
+    "jawaban": "Darkness"
+  },
+  {
+    "soal": "Always old, sometimes new, never sad, sometimes blue. Never empty, sometimes full, never pushing, always pulling. What am I?",
+    "jawaban": "The moon"
+  },
+  {
+    "soal": "What can run but never walks, has a mouth but never talks, has a head but never weeps, has a bed but never sleeps?",
+    "jawaban": "A river"
+  },
+  {
+    "soal": "What belongs to you but other people use it more than you do?",
+    "jawaban": "Your name"
+  }
 ]

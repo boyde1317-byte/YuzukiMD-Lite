@@ -1,32 +1,122 @@
 [
-  {"soal": "Film animasi tentang mainan yang hidup saat pemiliknya pergi", "jawaban": "Toy Story"},
-  {"soal": "Film tentang kapal mewah yang menabrak gunung es di Atlantik", "jawaban": "Titanic"},
-  {"soal": "Film superhero dengan pria berkostum laba-laba yang bisa memanjat gedung", "jawaban": "Spider-Man"},
-  {"soal": "Film animasi tentang ikan badut yang mencari anaknya di lautan", "jawaban": "Finding Nemo"},
-  {"soal": "Film horor tentang boneka Annabelle yang dirasuki iblis", "jawaban": "Annabelle"},
-  {"soal": "Film tentang bajak laut Karibia dengan kapten Jack Sparrow", "jawaban": "Pirates of the Caribbean"},
-  {"soal": "Film animasi Jepang tentang gadis yang tersesat di dunia roh", "jawaban": "Spirited Away"},
-  {"soal": "Film tentang dinosaurus yang dihidupkan kembali di sebuah taman", "jawaban": "Jurassic Park"},
-  {"soal": "Film horor tentang badut menakutkan bernama Pennywise", "jawaban": "IT"},
-  {"soal": "Film tentang cincin ajaib yang harus dihancurkan di gunung api", "jawaban": "Lord of the Rings"},
-  {"soal": "Film animasi tentang robot pembersih sampah yang jatuh cinta", "jawaban": "WALL-E"},
-  {"soal": "Film tentang penyihir muda yang bersekolah di Hogwarts", "jawaban": "Harry Potter"},
-  {"soal": "Film tentang boxer miskin yang mendapat kesempatan bertanding juara", "jawaban": "Rocky"},
-  {"soal": "Film animasi tentang putri berambut panjang yang terkurung di menara", "jawaban": "Tangled"},
-  {"soal": "Film tentang hacker yang menemukan bahwa dunia ini simulasi komputer", "jawaban": "The Matrix"},
-  {"soal": "Film tentang seorang pria yang terdampar sendirian di pulau terpencil", "jawaban": "Cast Away"},
-  {"soal": "Film animasi Disney tentang putri es yang bisa membekukan segalanya", "jawaban": "Frozen"},
-  {"soal": "Film tentang alien yang ingin menelepon rumahnya", "jawaban": "ET"},
-  {"soal": "Film tentang gladiator yang membalas dendam pada kaisar Roma", "jawaban": "Gladiator"},
-  {"soal": "Film animasi tentang keluarga superhero yang menyembunyikan kekuatan", "jawaban": "The Incredibles"},
-  {"soal": "Film tentang kapal selam nuklir dan perburuan bawah laut", "jawaban": "The Hunt for Red October"},
-  {"soal": "Film tentang agen rahasia Inggris dengan kode 007", "jawaban": "James Bond"},
-  {"soal": "Film horor tentang keluarga yang pindah ke hotel terpencil di musim dingin", "jawaban": "The Shining"},
-  {"soal": "Film animasi tentang tikus yang bermimpi jadi chef di Paris", "jawaban": "Ratatouille"},
-  {"soal": "Film tentang mimpi di dalam mimpi dengan totem berputar", "jawaban": "Inception"},
-  {"soal": "Film tentang panda gemuk yang menjadi Dragon Warrior", "jawaban": "Kung Fu Panda"},
-  {"soal": "Film tentang detektif dan sidekicknya yang memecahkan kasus di London", "jawaban": "Sherlock Holmes"},
-  {"soal": "Film tentang manusia serigala dan vampir yang berperang", "jawaban": "Underworld"},
-  {"soal": "Film animasi tentang ogre hijau yang tinggal di rawa", "jawaban": "Shrek"},
-  {"soal": "Film tentang balap mobil ilegal di jalanan kota", "jawaban": "Fast and Furious"}
+  {
+    "soal": "Animated film about toys that come to life when their owner leaves the room",
+    "jawaban": "Toy Story"
+  },
+  {
+    "soal": "Film about a luxury ship that strikes an iceberg in the Atlantic",
+    "jawaban": "Titanic"
+  },
+  {
+    "soal": "Superhero film featuring a man in a spider costume who can climb buildings",
+    "jawaban": "Spider-Man"
+  },
+  {
+    "soal": "Animated film about a clownfish searching for his son across the ocean",
+    "jawaban": "Finding Nemo"
+  },
+  {
+    "soal": "Horror film about a possessed doll named Annabelle",
+    "jawaban": "Annabelle"
+  },
+  {
+    "soal": "Film about Caribbean pirates featuring Captain Jack Sparrow",
+    "jawaban": "Pirates of the Caribbean"
+  },
+  {
+    "soal": "Japanese animated film about a girl who gets lost in the spirit world",
+    "jawaban": "Spirited Away"
+  },
+  {
+    "soal": "Film about dinosaurs brought back to life in a theme park",
+    "jawaban": "Jurassic Park"
+  },
+  {
+    "soal": "Horror film about a terrifying clown named Pennywise",
+    "jawaban": "IT"
+  },
+  {
+    "soal": "Film about a magical ring that must be destroyed in a volcano",
+    "jawaban": "The Lord of the Rings"
+  },
+  {
+    "soal": "Animated film about a cleaning robot that falls in love",
+    "jawaban": "WALL-E"
+  },
+  {
+    "soal": "Film about a young wizard who attends Hogwarts School",
+    "jawaban": "Harry Potter"
+  },
+  {
+    "soal": "Film about a poor boxer who gets a chance to fight the champion",
+    "jawaban": "Rocky"
+  },
+  {
+    "soal": "Animated film about a princess with very long hair locked in a tower",
+    "jawaban": "Tangled"
+  },
+  {
+    "soal": "Film about a superhero team that assembles to save the world",
+    "jawaban": "The Avengers"
+  },
+  {
+    "soal": "Animated film about a young lion who must reclaim his kingdom",
+    "jawaban": "The Lion King"
+  },
+  {
+    "soal": "Film set in the future about a machine that hunts humans",
+    "jawaban": "The Terminator"
+  },
+  {
+    "soal": "Animated film about a fish with a lucky fin searching for his son",
+    "jawaban": "Finding Nemo"
+  },
+  {
+    "soal": "Film about a computer hacker who discovers reality is a simulation",
+    "jawaban": "The Matrix"
+  },
+  {
+    "soal": "Musical animated film about a mermaid who wants to live on land",
+    "jawaban": "The Little Mermaid"
+  },
+  {
+    "soal": "Film about a young farm boy who becomes a Jedi warrior",
+    "jawaban": "Star Wars"
+  },
+  {
+    "soal": "Film about a hobbit on a quest to reclaim a mountain from a dragon",
+    "jawaban": "The Hobbit"
+  },
+  {
+    "soal": "Horror film about a group of friends in a haunted house",
+    "jawaban": "The Haunting"
+  },
+  {
+    "soal": "Animated film about a boy who befriends a friendly ghost",
+    "jawaban": "Casper"
+  },
+  {
+    "soal": "Film about an astronaut stranded alone on Mars",
+    "jawaban": "The Martian"
+  },
+  {
+    "soal": "Film about a soldier frozen in time and revived in the modern era",
+    "jawaban": "Captain America"
+  },
+  {
+    "soal": "Animated film about a group of zoo animals that escape to Madagascar",
+    "jawaban": "Madagascar"
+  },
+  {
+    "soal": "Film about a genius inventor who builds a suit of iron armour",
+    "jawaban": "Iron Man"
+  },
+  {
+    "soal": "Film about a tornado that transports a girl to a magical land",
+    "jawaban": "The Wizard of Oz"
+  },
+  {
+    "soal": "Animated film where toys are donated to a daycare",
+    "jawaban": "Toy Story 3"
+  }
 ]

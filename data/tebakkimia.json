@@ -1,6 +1,6 @@
 [
   {
-    "unsur": "Aktinium",
+    "unsur": "Actinium",
     "lambang": "Ac"
   },
   {
@@ -8,11 +8,11 @@
     "lambang": "Al"
   },
   {
-    "unsur": "Antimon",
+    "unsur": "Antimony",
     "lambang": "Sb"
   },
   {
-    "unsur": "Perak",
+    "unsur": "Silver",
     "lambang": "Ag"
   },
   {
@@ -24,11 +24,11 @@
     "lambang": "As"
   },
   {
-    "unsur": "Astatin",
+    "unsur": "Astatine",
     "lambang": "At"
   },
   {
-    "unsur": "Emas",
+    "unsur": "Gold",
     "lambang": "Au"
   },
   {
@@ -36,7 +36,7 @@
     "lambang": "Ba"
   },
   {
-    "unsur": "Belerang",
+    "unsur": "Sulfur",
     "lambang": "S"
   },
   {
@@ -44,15 +44,15 @@
     "lambang": "Bk"
   },
   {
-    "unsur": "Berilium",
+    "unsur": "Beryllium",
     "lambang": "Be"
   },
   {
-    "unsur": "Besi",
+    "unsur": "Iron",
     "lambang": "Fe"
   },
   {
-    "unsur": "Bismut",
+    "unsur": "Bismuth",
     "lambang": "Bi"
   },
   {
@@ -64,11 +64,11 @@
     "lambang": "B"
   },
   {
-    "unsur": "Brom",
+    "unsur": "Bromine",
     "lambang": "Br"
   },
   {
-    "unsur": "Tembaga",
+    "unsur": "Copper",
     "lambang": "Cu"
   },
   {
@@ -88,7 +88,7 @@
     "lambang": "Es"
   },
   {
-    "unsur": "Emas",
+    "unsur": "Gold",
     "lambang": "Au"
   },
   {
@@ -104,7 +104,7 @@
     "lambang": "Fm"
   },
   {
-    "unsur": "Besi",
+    "unsur": "Iron",
     "lambang": "Fe"
   },
   {
@@ -116,11 +116,11 @@
     "lambang": "F"
   },
   {
-    "unsur": "Fosfor",
+    "unsur": "Phosphorus",
     "lambang": "P"
   },
   {
-    "unsur": "Fransium",
+    "unsur": "Francium",
     "lambang": "Fr"
   },
   {
@@ -128,7 +128,7 @@
     "lambang": "Gd"
   },
   {
-    "unsur": "Galium",
+    "unsur": "Gallium",
     "lambang": "Ga"
   },
   {
@@ -148,7 +148,7 @@
     "lambang": "He"
   },
   {
-    "unsur": "Hidrogen",
+    "unsur": "Hydrogen",
     "lambang": "H"
   },
   {
@@ -156,7 +156,7 @@
     "lambang": "Ho"
   },
   {
-    "unsur": "Raksa",
+    "unsur": "Mercury",
     "lambang": "Hg"
   },
   {
@@ -172,23 +172,23 @@
     "lambang": "Ir"
   },
   {
-    "unsur": "Iterbium",
+    "unsur": "Ytterbium",
     "lambang": "Yb"
   },
   {
-    "unsur": "Itrium",
+    "unsur": "Yttrium",
     "lambang": "Y"
   },
   {
-    "unsur": "Kadmium",
+    "unsur": "Cadmium",
     "lambang": "Cd"
   },
   {
-    "unsur": "Kalium",
+    "unsur": "Potassium",
     "lambang": "K"
   },
   {
-    "unsur": "Kalsium",
+    "unsur": "Calcium",
     "lambang": "Ca"
   },
   {
@@ -196,7 +196,7 @@
     "lambang": "Cf"
   },
   {
-    "unsur": "Karbon",
+    "unsur": "Carbon",
     "lambang": "C"
   },
   {
@@ -208,7 +208,7 @@
     "lambang": "Cr"
   },
   {
-    "unsur": "Kobalt",
+    "unsur": "Cobalt",
     "lambang": "Co"
   },
   {
@@ -216,19 +216,19 @@
     "lambang": "Cn"
   },
   {
-    "unsur": "Kurium",
+    "unsur": "Curium",
     "lambang": "Cm"
   },
   {
-    "unsur": "Kripton",
+    "unsur": "Krypton",
     "lambang": "Kr"
   },
   {
-    "unsur": "Lantanum",
+    "unsur": "Lanthanum",
     "lambang": "La"
   },
   {
-    "unsur": "Lawrensium",
+    "unsur": "Lawrencium",
     "lambang": "Lr"
   },
   {
@@ -248,7 +248,7 @@
     "lambang": "Mg"
   },
   {
-    "unsur": "Mangan",
+    "unsur": "Manganese",
     "lambang": "Mn"
   },
   {
@@ -260,15 +260,15 @@
     "lambang": "Md"
   },
   {
-    "unsur": "Molibden",
+    "unsur": "Molybdenum",
     "lambang": "Mo"
   },
   {
-    "unsur": "Natrium",
+    "unsur": "Sodium",
     "lambang": "Na"
   },
   {
-    "unsur": "Neodimium",
+    "unsur": "Neodymium",
     "lambang": "Nd"
   },
   {
@@ -280,7 +280,7 @@
     "lambang": "Np"
   },
   {
-    "unsur": "Nikel",
+    "unsur": "Nickel",
     "lambang": "Ni"
   },
   {
@@ -300,31 +300,31 @@
     "lambang": "Os"
   },
   {
-    "unsur": "Oksigen",
+    "unsur": "Oxygen",
     "lambang": "O"
   },
   {
-    "unsur": "Paladium",
+    "unsur": "Palladium",
     "lambang": "Pd"
   },
   {
-    "unsur": "Perak",
+    "unsur": "Silver",
     "lambang": "Ag"
   },
   {
-    "unsur": "Timbal",
+    "unsur": "Lead",
     "lambang": "Pb"
   },
   {
-    "unsur": "Kalium",
+    "unsur": "Potassium",
     "lambang": "K"
   },
   {
-    "unsur": "Natrium",
+    "unsur": "Sodium",
     "lambang": "Na"
   },
   {
-    "unsur": "Platina",
+    "unsur": "Platinum",
     "lambang": "Pt"
   },
   {
@@ -336,15 +336,15 @@
     "lambang": "Po"
   },
   {
-    "unsur": "Praseodimium",
+    "unsur": "Praseodymium",
     "lambang": "Pr"
   },
   {
-    "unsur": "Prometium",
+    "unsur": "Promethium",
     "lambang": "Pm"
   },
   {
-    "unsur": "Protaktinium",
+    "unsur": "Protactinium",
     "lambang": "Pa"
   },
   {
@@ -356,11 +356,11 @@
     "lambang": "Rn"
   },
   {
-    "unsur": "Renium",
+    "unsur": "Rhenium",
     "lambang": "Re"
   },
   {
-    "unsur": "Rodium",
+    "unsur": "Rhodium",
     "lambang": "Rh"
   },
   {
@@ -372,7 +372,7 @@
     "lambang": "Rb"
   },
   {
-    "unsur": "Rutenium",
+    "unsur": "Ruthenium",
     "lambang": "Ru"
   },
   {
@@ -384,7 +384,7 @@
     "lambang": "Sm"
   },
   {
-    "unsur": "Skandium",
+    "unsur": "Scandium",
     "lambang": "Sc"
   },
   {
@@ -396,27 +396,27 @@
     "lambang": "Se"
   },
   {
-    "unsur": "Serium",
+    "unsur": "Cerium",
     "lambang": "Ce"
   },
   {
-    "unsur": "Sesium",
+    "unsur": "Caesium",
     "lambang": "Cs"
   },
   {
-    "unsur": "Silikon",
+    "unsur": "Silicon",
     "lambang": "Si"
   },
   {
-    "unsur": "Seng",
+    "unsur": "Zinc",
     "lambang": "Zn"
   },
   {
-    "unsur": "Timah",
+    "unsur": "Tin",
     "lambang": "Sn"
   },
   {
-    "unsur": "Antimon",
+    "unsur": "Antimony",
     "lambang": "Sb"
   },
   {
@@ -424,7 +424,7 @@
     "lambang": "Sr"
   },
   {
-    "unsur": "Talium",
+    "unsur": "Thallium",
     "lambang": "Tl"
   },
   {
@@ -436,11 +436,11 @@
     "lambang": "Tc"
   },
   {
-    "unsur": "Telurium",
+    "unsur": "Tellurium",
     "lambang": "Te"
   },
   {
-    "unsur": "Tembaga",
+    "unsur": "Copper",
     "lambang": "Cu"
   },
   {
@@ -448,11 +448,11 @@
     "lambang": "Tb"
   },
   {
-    "unsur": "Timah",
+    "unsur": "Tin",
     "lambang": "Sn"
   },
   {
-    "unsur": "Timbal",
+    "unsur": "Lead",
     "lambang": "Pb"
   },
   {
@@ -460,7 +460,7 @@
     "lambang": "Ti"
   },
   {
-    "unsur": "Torium",
+    "unsur": "Thorium",
     "lambang": "Th"
   },
   {
@@ -468,7 +468,7 @@
     "lambang": "Tm"
   },
   {
-    "unsur": "Wolfram",
+    "unsur": "Tungsten",
     "lambang": "W"
   },
   {
@@ -496,7 +496,7 @@
     "lambang": "Xe"
   },
   {
-    "unsur": "Zirkonium",
+    "unsur": "Zirconium",
     "lambang": "Zr"
   }
 ]

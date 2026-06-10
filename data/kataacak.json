@@ -1,32 +1,122 @@
 [
-  {"soal": "KUUCG", "jawaban": "KUCUN", "kata": "KUCUNG"},
-  {"soal": "ALPES", "jawaban": "LEPAS"},
-  {"soal": "TAGIN", "jawaban": "TIANG"},
-  {"soal": "RAKBU", "jawaban": "BURKA", "kata": "BURAK"},
-  {"soal": "NIDGA", "jawaban": "DIANG", "kata": "DIANG"},
-  {"soal": "LUBNAI", "jawaban": "BINALAU", "kata": "BINALU"},
-  {"soal": "AKREM", "jawaban": "MERAK"},
-  {"soal": "RATIK", "jawaban": "TIKAR"},
-  {"soal": "DAKUN", "jawaban": "KUNDAK", "kata": "UNDAK"},
-  {"soal": "HAMRI", "jawaban": "HIRAM", "kata": "MARAH"},
-  {"soal": "NAHAT", "jawaban": "TAHAN"},
-  {"soal": "KAPIN", "jawaban": "PIKAN", "kata": "NIKAP"},
-  {"soal": "LUTAB", "jawaban": "TABUL", "kata": "BATUL"},
-  {"soal": "GADNI", "jawaban": "DIANG", "kata": "DINAG"},
-  {"soal": "RATEJ", "jawaban": "JERAT"},
-  {"soal": "RUBAK", "jawaban": "KUBRA", "kata": "BURKA"},
-  {"soal": "NAKAB", "jawaban": "BAKAN"},
-  {"soal": "LUMAP", "jawaban": "LUMPA", "kata": "AMPUL"},
-  {"soal": "TIHAP", "jawaban": "HITAP", "kata": "PATHI"},
-  {"soal": "LINBA", "jawaban": "BALIN", "kata": "BINAL"},
-  {"soal": "RAKSI", "jawaban": "SIKRA", "kata": "SIRKA"},
-  {"soal": "BATUH", "jawaban": "TABUH"},
-  {"soal": "DIRAP", "jawaban": "RAPID", "kata": "RAPID"},
-  {"soal": "KUTAL", "jawaban": "TULAK"},
-  {"soal": "RAPIB", "jawaban": "RAPIB", "kata": "BIRAP"},
-  {"soal": "REMAK", "jawaban": "MERAK"},
-  {"soal": "BAKUJ", "jawaban": "JUBAK", "kata": "JUBAK"},
-  {"soal": "NAKAM", "jawaban": "MAKAN"},
-  {"soal": "LITAM", "jawaban": "MILAT", "kata": "MATIL"},
-  {"soal": "NIRJA", "jawaban": "JANJI", "kata": "RANIJ"}
+  {
+    "soal": "PPLEA",
+    "jawaban": "APPLE"
+  },
+  {
+    "soal": "ANGERO",
+    "jawaban": "ORANGE"
+  },
+  {
+    "soal": "NABANA",
+    "jawaban": "BANANA"
+  },
+  {
+    "soal": "TARWE",
+    "jawaban": "WATER"
+  },
+  {
+    "soal": "OEHUS",
+    "jawaban": "HOUSE"
+  },
+  {
+    "soal": "NWHIC",
+    "jawaban": "WHICH"
+  },
+  {
+    "soal": "ESACH",
+    "jawaban": "CHASE"
+  },
+  {
+    "soal": "RAEHT",
+    "jawaban": "HEART"
+  },
+  {
+    "soal": "HCESA",
+    "jawaban": "ACHES"
+  },
+  {
+    "soal": "ELPAT",
+    "jawaban": "PLATE"
+  },
+  {
+    "soal": "BREDA",
+    "jawaban": "BREAD"
+  },
+  {
+    "soal": "TORES",
+    "jawaban": "STORE"
+  },
+  {
+    "soal": "CALHE",
+    "jawaban": "LEACH"
+  },
+  {
+    "soal": "PRGEA",
+    "jawaban": "GRAPE"
+  },
+  {
+    "soal": "ETRHE",
+    "jawaban": "THREE"
+  },
+  {
+    "soal": "LBACT",
+    "jawaban": "BLACK"
+  },
+  {
+    "soal": "HNIGT",
+    "jawaban": "NIGHT"
+  },
+  {
+    "soal": "RUOSG",
+    "jawaban": "GROUSE"
+  },
+  {
+    "soal": "OCBEL",
+    "jawaban": "ELBOW"
+  },
+  {
+    "soal": "RSTEA",
+    "jawaban": "TEARS"
+  },
+  {
+    "soal": "GLHIT",
+    "jawaban": "LIGHT"
+  },
+  {
+    "soal": "TIHGN",
+    "jawaban": "THING"
+  },
+  {
+    "soal": "EARTH",
+    "jawaban": "EARTH"
+  },
+  {
+    "soal": "WDOSL",
+    "jawaban": "WORDS"
+  },
+  {
+    "soal": "RNTIG",
+    "jawaban": "TIRING"
+  },
+  {
+    "soal": "PSLAH",
+    "jawaban": "PLASH"
+  },
+  {
+    "soal": "CLFOU",
+    "jawaban": "CLOUD"
+  },
+  {
+    "soal": "LNPIO",
+    "jawaban": "PINOL"
+  },
+  {
+    "soal": "RTWOS",
+    "jawaban": "WORST"
+  },
+  {
+    "soal": "DSTUN",
+    "jawaban": "STUND"
+  }
 ]

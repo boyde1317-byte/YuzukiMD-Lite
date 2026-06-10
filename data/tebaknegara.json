@@ -1,32 +1,122 @@
 [
-  {"soal": "Negara kepulauan terbesar di dunia dengan lebih dari 17.000 pulau", "jawaban": "Indonesia"},
-  {"soal": "Negara di Eropa yang terkenal dengan menara miring Pisa", "jawaban": "Italia"},
-  {"soal": "Negara paling kecil di dunia yang terletak di dalam kota Roma", "jawaban": "Vatikan"},
-  {"soal": "Negara yang terkenal dengan piramida dan Sphinx di gurun pasir", "jawaban": "Mesir"},
-  {"soal": "Negara dengan populasi terbanyak di dunia yang ibukotanya Beijing", "jawaban": "China"},
-  {"soal": "Negara benua sekaligus yang terkenal dengan kanguru dan koala", "jawaban": "Australia"},
-  {"soal": "Negara di Asia Timur yang terkenal dengan teknologi dan K-Pop", "jawaban": "Korea Selatan"},
-  {"soal": "Negara di Eropa yang terkenal dengan jam, cokelat, dan pegunungan Alpen", "jawaban": "Swiss"},
-  {"soal": "Negara di Amerika Selatan terbesar yang terkenal dengan karnavalnya", "jawaban": "Brasil"},
-  {"soal": "Negara kepulauan di Pasifik yang terkenal dengan haka dan suku Maori", "jawaban": "Selandia Baru"},
-  {"soal": "Negara di Asia Tenggara yang dikenal sebagai negeri Gajah Putih", "jawaban": "Thailand"},
-  {"soal": "Negara di Eropa yang terkenal dengan tulip, kincir angin, dan keju", "jawaban": "Belanda"},
-  {"soal": "Negara di Afrika Selatan yang pernah dipimpin Nelson Mandela", "jawaban": "Afrika Selatan"},
-  {"soal": "Negara yang terkenal dengan sushi, sakura, dan gunung Fuji", "jawaban": "Jepang"},
-  {"soal": "Negara di Amerika Utara yang terkenal dengan Patung Liberty", "jawaban": "Amerika Serikat"},
-  {"soal": "Negara monarki di Asia Tenggara yang kaya akan minyak", "jawaban": "Brunei"},
-  {"soal": "Negara terluas di dunia yang membentang dari Eropa hingga Asia", "jawaban": "Rusia"},
-  {"soal": "Negara di Eropa Barat yang terkenal dengan menara Eiffel", "jawaban": "Prancis"},
-  {"soal": "Negara di Timur Tengah yang terkenal dengan gedung Burj Khalifa", "jawaban": "Uni Emirat Arab"},
-  {"soal": "Negara di Asia Selatan yang terkenal dengan Taj Mahal", "jawaban": "India"},
-  {"soal": "Negara di Eropa yang terkenal dengan Tembok Berlin dan bir", "jawaban": "Jerman"},
-  {"soal": "Negara kepulauan di Karibia yang terkenal dengan musik reggae", "jawaban": "Jamaika"},
-  {"soal": "Negara di Amerika Selatan yang terkenal dengan tango dan steak", "jawaban": "Argentina"},
-  {"soal": "Negara di Eropa Utara yang dijuluki negeri es dan api", "jawaban": "Islandia"},
-  {"soal": "Negara di Asia Tenggara yang bentuknya seperti huruf S", "jawaban": "Vietnam"},
-  {"soal": "Negara di Afrika Timur yang terkenal dengan safari dan Kilimanjaro", "jawaban": "Tanzania"},
-  {"soal": "Negara monarki konstitusional yang ibukotanya London", "jawaban": "Inggris"},
-  {"soal": "Negara di Eropa Selatan yang terkenal dengan pantai Santorini", "jawaban": "Yunani"},
-  {"soal": "Negara pulau kecil di Asia Tenggara yang dijuluki kota singa", "jawaban": "Singapura"},
-  {"soal": "Negara di Amerika Tengah yang terkenal dengan reruntuhan Maya", "jawaban": "Meksiko"}
+  {
+    "soal": "The largest archipelago nation in the world with over 17,000 islands",
+    "jawaban": "Indonesia"
+  },
+  {
+    "soal": "European country famous for the Leaning Tower of Pisa",
+    "jawaban": "Italy"
+  },
+  {
+    "soal": "The smallest country in the world, located inside Rome",
+    "jawaban": "Vatican City"
+  },
+  {
+    "soal": "Country famous for its pyramids and the Sphinx in the desert",
+    "jawaban": "Egypt"
+  },
+  {
+    "soal": "The most populous country in the world with capital city Beijing",
+    "jawaban": "China"
+  },
+  {
+    "soal": "A continent and country famous for kangaroos and koalas",
+    "jawaban": "Australia"
+  },
+  {
+    "soal": "East Asian country famous for technology and K-Pop",
+    "jawaban": "South Korea"
+  },
+  {
+    "soal": "European country known for watches, chocolate, and the Alps",
+    "jawaban": "Switzerland"
+  },
+  {
+    "soal": "The largest country in South America, famous for its carnival",
+    "jawaban": "Brazil"
+  },
+  {
+    "soal": "Pacific island nation famous for the haka and the Maori people",
+    "jawaban": "New Zealand"
+  },
+  {
+    "soal": "Southeast Asian country known as the Land of Smiles",
+    "jawaban": "Thailand"
+  },
+  {
+    "soal": "European country famous for tulips, windmills, and cheese",
+    "jawaban": "Netherlands"
+  },
+  {
+    "soal": "The southernmost African country once led by Nelson Mandela",
+    "jawaban": "South Africa"
+  },
+  {
+    "soal": "Asian island nation famous for sushi, cherry blossoms, and Mount Fuji",
+    "jawaban": "Japan"
+  },
+  {
+    "soal": "Country with the world's largest rainforest, the Amazon",
+    "jawaban": "Brazil"
+  },
+  {
+    "soal": "The country with the Eiffel Tower and world-famous cuisine",
+    "jawaban": "France"
+  },
+  {
+    "soal": "Country famous for the Big Ben and Buckingham Palace",
+    "jawaban": "United Kingdom"
+  },
+  {
+    "soal": "South American country famous for the Andes and Machu Picchu",
+    "jawaban": "Peru"
+  },
+  {
+    "soal": "The largest country in the world by land area",
+    "jawaban": "Russia"
+  },
+  {
+    "soal": "Country famous for its fjords and the Northern Lights",
+    "jawaban": "Norway"
+  },
+  {
+    "soal": "A country on the Iberian Peninsula famous for flamenco and bullfighting",
+    "jawaban": "Spain"
+  },
+  {
+    "soal": "Country famous for the Taj Mahal and its diverse culture",
+    "jawaban": "India"
+  },
+  {
+    "soal": "The birthplace of democracy and the Olympic Games",
+    "jawaban": "Greece"
+  },
+  {
+    "soal": "Country famous for its maple syrup and Niagara Falls",
+    "jawaban": "Canada"
+  },
+  {
+    "soal": "A North African country famous for its ancient ruins and the Sahara Desert",
+    "jawaban": "Morocco"
+  },
+  {
+    "soal": "The country with the most Nobel Prize winners, known for engineering and precision",
+    "jawaban": "Germany"
+  },
+  {
+    "soal": "The country with the world's longest wall",
+    "jawaban": "China"
+  },
+  {
+    "soal": "A country in the Middle East famous for its oil reserves and the Burj Khalifa",
+    "jawaban": "United Arab Emirates"
+  },
+  {
+    "soal": "The country with the Amazon River delta and the town of Fortaleza",
+    "jawaban": "Brazil"
+  },
+  {
+    "soal": "Country known as the Gateway to Europe, famous for its castles and beer",
+    "jawaban": "Czech Republic"
+  }
 ]

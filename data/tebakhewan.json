@@ -1,32 +1,122 @@
 [
-  {"soal": "Hewan mamalia terbesar di dunia yang hidup di lautan", "jawaban": "Paus Biru"},
-  {"soal": "Hewan berkantung asal Australia yang terkenal suka melompat", "jawaban": "Kanguru"},
-  {"soal": "Hewan reptil terbesar yang hidup di sungai dan rawa", "jawaban": "Buaya"},
-  {"soal": "Burung yang tidak bisa terbang tapi bisa berlari sangat cepat", "jawaban": "Burung Unta"},
-  {"soal": "Hewan laut bertentakel 8 yang bisa berubah warna", "jawaban": "Gurita"},
-  {"soal": "Kucing besar bertotol hitam yang berasal dari Afrika", "jawaban": "Cheetah"},
-  {"soal": "Hewan malam yang bisa terbang dan menggunakan sonar", "jawaban": "Kelelawar"},
-  {"soal": "Hewan bertubuh lunak yang membawa rumahnya di punggung", "jawaban": "Siput"},
-  {"soal": "Primata cerdas yang memiliki DNA 98% mirip manusia", "jawaban": "Simpanse"},
-  {"soal": "Hewan bersayap indah yang bermetamorfosis dari ulat", "jawaban": "Kupu-kupu"},
-  {"soal": "Hewan bertanduk satu yang terancam punah di Indonesia", "jawaban": "Badak Jawa"},
-  {"soal": "Burung cantik yang bisa meniru suara manusia", "jawaban": "Beo"},
-  {"soal": "Hewan laut berduri yang bergerak sangat lambat", "jawaban": "Bintang Laut"},
-  {"soal": "Hewan berkaki empat yang dikenal setia pada pemiliknya", "jawaban": "Anjing"},
-  {"soal": "Hewan air tawar yang bisa menghasilkan listrik hingga 860 volt", "jawaban": "Belut Listrik"},
-  {"soal": "Serangga yang membuat sarang dari lilin dan menghasilkan madu", "jawaban": "Lebah"},
-  {"soal": "Hewan laut lucu yang jantan yang mengandung anaknya", "jawaban": "Kuda Laut"},
-  {"soal": "Hewan yang terkenal lambat dan suka menempel di pohon", "jawaban": "Kukang"},
-  {"soal": "Burung dengan leher panjang yang sering berdiri satu kaki", "jawaban": "Flamingo"},
-  {"soal": "Hewan pengerat kecil yang suka mengumpulkan makanan di pipinya", "jawaban": "Hamster"},
-  {"soal": "Hewan buas raja hutan yang memiliki surai lebat", "jawaban": "Singa"},
-  {"soal": "Reptil kecil yang bisa memutuskan ekornya saat terancam", "jawaban": "Cicak"},
-  {"soal": "Hewan laut yang memiliki 3 jantung dan darah biru", "jawaban": "Gurita"},
-  {"soal": "Mamalia terbang satu-satunya yang aktif di malam hari", "jawaban": "Kelelawar"},
-  {"soal": "Hewan herbivora besar dengan leher sangat panjang", "jawaban": "Jerapah"},
-  {"soal": "Hewan amfibi beracun berwarna cerah dari Amerika Selatan", "jawaban": "Katak Panah"},
-  {"soal": "Ikan air tawar predator ganas dari sungai Amazon", "jawaban": "Piranha"},
-  {"soal": "Hewan berkantung yang suka memanjat pohon eucalyptus", "jawaban": "Koala"},
-  {"soal": "Serangga sosial yang bisa mengangkat 50x berat tubuhnya", "jawaban": "Semut"},
-  {"soal": "Hewan laut berbentuk payung yang bisa menyengat", "jawaban": "Ubur-ubur"}
+  {
+    "soal": "The largest mammal in the world that lives in the ocean",
+    "jawaban": "Blue Whale"
+  },
+  {
+    "soal": "A marsupial from Australia known for jumping",
+    "jawaban": "Kangaroo"
+  },
+  {
+    "soal": "The largest reptile that lives in rivers and swamps",
+    "jawaban": "Crocodile"
+  },
+  {
+    "soal": "A bird that cannot fly but can run very fast",
+    "jawaban": "Ostrich"
+  },
+  {
+    "soal": "A sea creature with eight tentacles that can change colour",
+    "jawaban": "Octopus"
+  },
+  {
+    "soal": "A spotted big cat from Africa, the fastest land animal",
+    "jawaban": "Cheetah"
+  },
+  {
+    "soal": "A nocturnal animal that can fly and uses sonar to navigate",
+    "jawaban": "Bat"
+  },
+  {
+    "soal": "A soft-bodied animal that carries its house on its back",
+    "jawaban": "Snail"
+  },
+  {
+    "soal": "A highly intelligent primate sharing 98% DNA with humans",
+    "jawaban": "Chimpanzee"
+  },
+  {
+    "soal": "A beautiful winged insect that metamorphoses from a caterpillar",
+    "jawaban": "Butterfly"
+  },
+  {
+    "soal": "The largest land animal on Earth",
+    "jawaban": "African Elephant"
+  },
+  {
+    "soal": "A colourful bird famous for mimicking human speech",
+    "jawaban": "Parrot"
+  },
+  {
+    "soal": "A slow-moving five-armed sea creature",
+    "jawaban": "Starfish"
+  },
+  {
+    "soal": "A four-legged animal known as man's best friend",
+    "jawaban": "Dog"
+  },
+  {
+    "soal": "A black and white bear from China that eats bamboo",
+    "jawaban": "Giant Panda"
+  },
+  {
+    "soal": "A long-necked African mammal, the tallest land animal",
+    "jawaban": "Giraffe"
+  },
+  {
+    "soal": "A marine mammal that uses echolocation and is known for its intelligence",
+    "jawaban": "Dolphin"
+  },
+  {
+    "soal": "A large flightless bird from New Zealand",
+    "jawaban": "Kiwi"
+  },
+  {
+    "soal": "A striped big cat from Asia, the largest wild cat",
+    "jawaban": "Tiger"
+  },
+  {
+    "soal": "A mammal with a pouch in which it carries its young",
+    "jawaban": "Kangaroo"
+  },
+  {
+    "soal": "A small nocturnal mammal with sharp quills for protection",
+    "jawaban": "Hedgehog"
+  },
+  {
+    "soal": "A bird known for its spectacular tail feathers",
+    "jawaban": "Peacock"
+  },
+  {
+    "soal": "A large bear with distinctive white fur found in the Arctic",
+    "jawaban": "Polar Bear"
+  },
+  {
+    "soal": "A fish known for its sharp teeth and aggressive nature",
+    "jawaban": "Shark"
+  },
+  {
+    "soal": "A fast horse-like animal with black and white stripes",
+    "jawaban": "Zebra"
+  },
+  {
+    "soal": "A slow-moving reptile with a hard protective shell",
+    "jawaban": "Tortoise"
+  },
+  {
+    "soal": "A large primate from Africa known for its strength",
+    "jawaban": "Gorilla"
+  },
+  {
+    "soal": "A venomous reptile that moves without legs",
+    "jawaban": "Snake"
+  },
+  {
+    "soal": "A river mammal with a flat tail that builds dams",
+    "jawaban": "Beaver"
+  },
+  {
+    "soal": "A small red-breasted bird often seen in gardens",
+    "jawaban": "Robin"
+  }
 ]

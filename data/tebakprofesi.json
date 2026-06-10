@@ -1,32 +1,122 @@
 [
-  {"soal": "Profesi yang bertugas merawat kesehatan gigi dan mulut pasien", "jawaban": "Dokter Gigi"},
-  {"soal": "Profesi yang merancang dan membangun struktur bangunan", "jawaban": "Arsitek"},
-  {"soal": "Profesi yang menerbangkan pesawat komersial", "jawaban": "Pilot"},
-  {"soal": "Profesi yang bekerja di laut untuk menangkap ikan", "jawaban": "Nelayan"},
-  {"soal": "Profesi yang membuat roti, kue, dan pastry", "jawaban": "Baker"},
-  {"soal": "Profesi yang mengajarkan ilmu pengetahuan di sekolah", "jawaban": "Guru"},
-  {"soal": "Profesi hukum yang membela klien di pengadilan", "jawaban": "Pengacara"},
-  {"soal": "Profesi yang menulis berita dan melaporkan peristiwa", "jawaban": "Wartawan"},
-  {"soal": "Profesi yang memasak makanan di restoran", "jawaban": "Koki"},
-  {"soal": "Profesi yang menyelidiki kasus kejahatan", "jawaban": "Detektif"},
-  {"soal": "Profesi yang merancang dan membuat pakaian", "jawaban": "Desainer Fashion"},
-  {"soal": "Profesi yang membuat program dan aplikasi komputer", "jawaban": "Programmer"},
-  {"soal": "Profesi yang merawat dan mengobati hewan yang sakit", "jawaban": "Dokter Hewan"},
-  {"soal": "Profesi yang mengelola keuangan perusahaan dan pajak", "jawaban": "Akuntan"},
-  {"soal": "Profesi yang memadamkan kebakaran dan menyelamatkan korban", "jawaban": "Pemadam Kebakaran"},
-  {"soal": "Profesi yang mengantar surat dan paket ke rumah-rumah", "jawaban": "Tukang Pos"},
-  {"soal": "Profesi yang menjaga keamanan dan ketertiban masyarakat", "jawaban": "Polisi"},
-  {"soal": "Profesi yang merawat pasien di rumah sakit", "jawaban": "Perawat"},
-  {"soal": "Profesi yang mengendarai ambulans dan menangani darurat medis", "jawaban": "Paramedis"},
-  {"soal": "Profesi yang mengelola dan memimpin perusahaan", "jawaban": "CEO"},
-  {"soal": "Profesi yang menerjemahkan bahasa asing secara lisan", "jawaban": "Interpreter"},
-  {"soal": "Profesi yang mempelajari bintang dan benda langit", "jawaban": "Astronot"},
-  {"soal": "Profesi yang mendesain tampilan website dan aplikasi", "jawaban": "UI Designer"},
-  {"soal": "Profesi yang bertanggung jawab atas keamanan siber organisasi", "jawaban": "Cyber Security"},
-  {"soal": "Profesi yang memotong dan menata rambut pelanggan", "jawaban": "Barber"},
-  {"soal": "Profesi yang memandu wisatawan di tempat-tempat wisata", "jawaban": "Tour Guide"},
-  {"soal": "Profesi yang meracik dan menjual obat di apotek", "jawaban": "Apoteker"},
-  {"soal": "Profesi yang mengoperasi pasien di ruang operasi", "jawaban": "Dokter Bedah"},
-  {"soal": "Profesi yang menyanyi dan tampil di panggung konser", "jawaban": "Penyanyi"},
-  {"soal": "Profesi yang menggambar dan melukis karya seni", "jawaban": "Pelukis"}
+  {
+    "soal": "A professional who takes care of dental health and treats teeth",
+    "jawaban": "Dentist"
+  },
+  {
+    "soal": "A professional who designs and oversees the construction of buildings",
+    "jawaban": "Architect"
+  },
+  {
+    "soal": "A professional who pilots commercial aircraft",
+    "jawaban": "Pilot"
+  },
+  {
+    "soal": "A professional who works at sea to catch fish",
+    "jawaban": "Fisherman"
+  },
+  {
+    "soal": "A professional who bakes bread, cakes, and pastries",
+    "jawaban": "Baker"
+  },
+  {
+    "soal": "A professional who teaches knowledge and skills at school",
+    "jawaban": "Teacher"
+  },
+  {
+    "soal": "A legal professional who defends clients in court",
+    "jawaban": "Lawyer"
+  },
+  {
+    "soal": "A professional who writes news articles and reports events",
+    "jawaban": "Journalist"
+  },
+  {
+    "soal": "A professional who prepares food in a restaurant",
+    "jawaban": "Chef"
+  },
+  {
+    "soal": "A professional who investigates crimes",
+    "jawaban": "Detective"
+  },
+  {
+    "soal": "A professional who designs and creates clothing",
+    "jawaban": "Fashion Designer"
+  },
+  {
+    "soal": "A professional who writes programs and builds software",
+    "jawaban": "Programmer"
+  },
+  {
+    "soal": "A professional who treats sick and injured animals",
+    "jawaban": "Veterinarian"
+  },
+  {
+    "soal": "A professional who manages accounts and financial records",
+    "jawaban": "Accountant"
+  },
+  {
+    "soal": "A professional who treats patients and prescribes medicine",
+    "jawaban": "Doctor"
+  },
+  {
+    "soal": "A professional who repairs and installs electrical systems",
+    "jawaban": "Electrician"
+  },
+  {
+    "soal": "A professional who takes care of patients in a hospital",
+    "jawaban": "Nurse"
+  },
+  {
+    "soal": "A professional who puts out fires and rescues people",
+    "jawaban": "Firefighter"
+  },
+  {
+    "soal": "A professional who cuts and styles hair",
+    "jawaban": "Hairdresser"
+  },
+  {
+    "soal": "A professional who fixes plumbing systems and pipes",
+    "jawaban": "Plumber"
+  },
+  {
+    "soal": "A professional who works in space research and space travel",
+    "jawaban": "Astronaut"
+  },
+  {
+    "soal": "A professional who performs music for audiences",
+    "jawaban": "Musician"
+  },
+  {
+    "soal": "A professional who represents clients in real estate transactions",
+    "jawaban": "Real Estate Agent"
+  },
+  {
+    "soal": "A professional who translates content between languages",
+    "jawaban": "Translator"
+  },
+  {
+    "soal": "A professional who plans and books travel for clients",
+    "jawaban": "Travel Agent"
+  },
+  {
+    "soal": "A professional who repairs vehicles",
+    "jawaban": "Mechanic"
+  },
+  {
+    "soal": "A professional who delivers letters and parcels",
+    "jawaban": "Postman"
+  },
+  {
+    "soal": "A professional who paints pictures and creates art",
+    "jawaban": "Artist"
+  },
+  {
+    "soal": "A professional who plans meals and nutrition programmes",
+    "jawaban": "Nutritionist"
+  },
+  {
+    "soal": "A professional who handles legal documents and notarises agreements",
+    "jawaban": "Notary"
+  }
 ]
