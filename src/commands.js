@@ -360,41 +360,33 @@ export async function handleCommand({ sock, msg, command, args }) {
         id: `${prefix}menu ${key}`,
       }));
 
+      // ── Time-based greeting for the offer badge title ─────────────────
+      const _hr = new Date().getHours();
+      const _greeting =
+        _hr < 5  ? "Good Night 🌙" :
+        _hr < 12 ? "Good Morning ☀️" :
+        _hr < 17 ? "Good Afternoon 🌤️" :
+        _hr < 21 ? "Good Evening 🌙" : "Good Night 🌙";
+
       try {
-        const mediaHeader = await prepareWAMessageMedia(
-          menuThumb ? { image: menuThumb } : { image: { url: imageUrl } },
-          { upload: sock.waUploadToServer }
-        );
-        const interactiveMsg = generateWAMessageFromContent(jid, {
-          viewOnceMessage: {
-            message: {
-              messageContextInfo: {
-                deviceListMetadata: {},
-                deviceListMetadataVersion: 2,
-              },
-              interactiveMessage: {
-                body: { text: menuCaption },
-                footer: { text: `Powered by Yuzukimd` },
-                header: {
-                  title: "",
-                  subtitle: "",
-                  hasMediaAttachment: true,
-                  ...mediaHeader,
-                },
-                nativeFlowMessage: {
-                  buttons: [{
-                    name: "single_select",
-                    buttonParamsJson: JSON.stringify({
-                      title: "📂 Browse Categories",
-                      sections: [{ title: "Menu Categories", rows: menuRows }],
-                    }),
-                  }],
-                },
-              },
-            },
-          },
-        }, { quoted: msg }, {});
-        await sock.relayMessage(interactiveMsg.key.remoteJid, interactiveMsg.message, { messageId: interactiveMsg.key.id });
+        // NativeFlowCard wraps everything (viewOnceMessage → interactiveMessage).
+        // .setOffer() activates the 🏷️ badge: title in the badge, "Code:" subtitle,
+        // and an expiry timestamp. 99999999999 ms = never shows "Offer ended".
+        const menuCard = new NativeFlowCard(sock)
+          .setTitle(_greeting)
+          .setBody(menuCaption)
+          .setFooter("Powered by " + botName)
+          .setOffer(99999999999, botName)
+          .setContext(menuCtx);
+
+        if (menuThumb) menuCard.setMedia({ image: menuThumb });
+        else           menuCard.setMedia({ image: { url: imageUrl } });
+
+        menuCard.addSelect("📂 Browse Categories", "Menu Categories", menuRows);
+        menuCard.addQuickReply("📜 All Commands", prefix + "allmenu");
+        if (ownerNumber) menuCard.addCtaUrl("👑 Owner", "https://wa.me/" + ownerNumber);
+
+        await menuCard.send(jid, { quoted: msg });
       } catch {
         try {
           await sock.sendMessage(jid, { image: { url: imageUrl }, caption: menuCaption, contextInfo: menuCtx });
