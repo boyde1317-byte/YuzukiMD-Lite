@@ -230,7 +230,7 @@ export function checkCooldown(user, commandKey, cooldownSeconds) {
  * Format numbers with Indonesian locale (Yuzuki style).
  */
 export function formatKoin(n) {
-  return `Rp ${(n || 0).toLocaleString("id-ID")}`;
+  return `Rp ${(n || 0).toLocaleString("en-US")}`;
 }
 
 /**
