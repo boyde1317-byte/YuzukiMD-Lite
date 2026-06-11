@@ -416,89 +416,81 @@ export async function handleCommand({ sock, msg, command, args }) {
           id: `${prefix}menu ${key}`,
         }));
 
-        // OURIN-style: prepareWAMessageMedia + raw viewOnceMessage relayMessage.
-        // No generateWAMessageFromContent — build the proto directly, same as ourin-baileys menu.js.
-        // Fallback to plain image+caption if the interactive send fails.
+        // Step 1: Send banner image + full caption — same plain sendMessage that .menu uses.
+        // prepareWAMessageMedia / CDN upload is skipped here to avoid hangs.
         if (imgBuf) {
-          try {
-            const mediaHeader = await prepareWAMessageMedia(
-              { image: imgBuf },
-              { upload: sock.waUploadToServer }
-            );
-            await sock.relayMessage(
-              jid,
-              {
-                viewOnceMessage: {
-                  message: {
-                    messageContextInfo: {},
-                    interactiveMessage: {
-                      header: {
-                        title: "",
-                        subtitle: "",
-                        hasMediaAttachment: true,
-                        imageMessage: mediaHeader.imageMessage,
-                      },
-                      body: { text: fullCaption },
-                      footer: { text: `Powered by ${botName}` },
-                      contextInfo: {
-                        isForwarded: true,
-                        forwardingScore: 9,
-                        participant: "0@s.whatsapp.net",
-                        quotedMessage: { conversation: botName },
-                        mentionedJid: [],
-                      },
-                      nativeFlowMessage: {
-                        messageParamsJson: JSON.stringify({
-                          limited_time_offer: {
-                            text: botName,
-                            url: "Hai",
-                            copy_code: `${totalCmds} commands`,
-                            expiration_time: Date.now() + 1000000,
-                          },
-                        }),
-                        buttons: [
-                          {
-                            name: "quick_reply",
-                            buttonParamsJson: JSON.stringify({
-                              display_text: "📂 Back to Main Menu",
-                              id: `${prefix}menu`,
-                            }),
-                          },
-                          {
-                            name: "single_select",
-                            buttonParamsJson: JSON.stringify({
-                              title: "📋 Browse Categories",
-                              sections: [{ title: "Menu Categories", rows: menuRows }],
-                            }),
-                          },
-                        ],
-                      },
+          await sock.sendMessage(jid, {
+            image: imgBuf,
+            caption: fullCaption,
+            contextInfo: {
+              externalAdReply: {
+                title: botName,
+                body: `${totalCmds} commands available`,
+                thumbnail: imgBuf,
+                mediaType: 1,
+                renderLargerThumbnail: false,
+                sourceUrl: "https://github.com/boyde1317-byte/YuzukiMD-Lite",
+              },
+            },
+          }, { quoted: msg });
+        } else {
+          await reply(fullCaption);
+        }
+
+        // Step 2: Try a text-only interactive with a quick_reply + single_select.
+        // No image upload — header.hasMediaAttachment = false so no prepareWAMessageMedia call.
+        // If this fails for any reason the full menu is already delivered above.
+        try {
+          await sock.relayMessage(
+            jid,
+            {
+              viewOnceMessage: {
+                message: {
+                  messageContextInfo: {},
+                  interactiveMessage: {
+                    header: { hasMediaAttachment: false },
+                    body: { text: `📂 *Navigate by category:*` },
+                    footer: { text: `Powered by ${botName}` },
+                    contextInfo: {
+                      isForwarded: true,
+                      forwardingScore: 9,
+                      participant: "0@s.whatsapp.net",
+                      quotedMessage: { conversation: botName },
+                      mentionedJid: [],
+                    },
+                    nativeFlowMessage: {
+                      messageParamsJson: JSON.stringify({
+                        limited_time_offer: {
+                          text: botName,
+                          url: "Hai",
+                          copy_code: `${totalCmds} commands`,
+                          expiration_time: Date.now() + 1000000,
+                        },
+                      }),
+                      buttons: [
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            display_text: "🏠 Main Menu",
+                            id: `${prefix}menu`,
+                          }),
+                        },
+                        {
+                          name: "single_select",
+                          buttonParamsJson: JSON.stringify({
+                            title: "📋 Browse Categories",
+                            sections: [{ title: "Menu Categories", rows: menuRows }],
+                          }),
+                        },
+                      ],
                     },
                   },
                 },
               },
-              {}
-            );
-          } catch {
-            // Fallback — plain image+caption
-            await sock.sendMessage(jid, {
-              image: imgBuf,
-              caption: fullCaption,
-              contextInfo: {
-                externalAdReply: {
-                  title: botName,
-                  body: `${totalCmds} commands available`,
-                  thumbnail: imgBuf,
-                  mediaType: 1,
-                  renderLargerThumbnail: false,
-                  sourceUrl: "https://github.com/boyde1317-byte/YuzukiMD-Lite",
-                },
-              },
-            }, { quoted: msg });
-          }
-        } else {
-          await reply(fullCaption);
-        }
+            },
+            {}
+          );
+        } catch { /* buttons optional — full menu already sent above */ }
 
         await sock.sendMessage(jid, { react: { text: "✅", key: msg.key } });
       } catch (e) {
