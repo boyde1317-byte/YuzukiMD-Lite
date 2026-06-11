@@ -1,6 +1,6 @@
 import { getDatabase, checkCooldown, formatKoin } from "../../lib/legacy-compat.js";
 const pluginConfig = {
-  name: "heal", alias: ["healing", "obat"], category: "rpg",
+  name: "heal", alias: ["healing"], category: "rpg",
   description: "Heal your HP using coins", usage: ".heal",
   example: ".heal", isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
   cooldown: 30, isEnabled: true,
