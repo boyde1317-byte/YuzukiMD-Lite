@@ -84,7 +84,7 @@ const ROLES = {
   },
 };
 
-const WIN_REWARD = { koin: 5000, exp: 1000 };
+const WIN_REWARD = { coins: 5000, exp: 1000 };
 const MIN_PLAYERS = 4;
 const MAX_PLAYERS = 15;
 const PHASE_DURATION = {
@@ -383,7 +383,7 @@ async function handler(m, { sock }) {
           chatId !== m.chat && room.players.some((p) => p.id === m.sender),
       );
       if (existingRoom) {
-        return m.reply(`❌ Kamu masih dalam game di grup lain!`);
+        return m.reply(`❌ You are already in a game in another group!`);
       }
 
       ww[m.chat].players.push({
@@ -630,7 +630,7 @@ async function handler(m, { sock }) {
 
     exit: async () => {
       if (!ww[m.chat]) {
-        return m.reply(`❌ Tidak ada game di room ini!`);
+        return m.reply(`❌ No active game in this room!`);
       }
 
       const playerIdx = ww[m.chat].players.findIndex((p) => p.id === m.sender);
@@ -1010,7 +1010,7 @@ async function endGame(chatId, sock, db, winner) {
   // Give rewards to winners
   for (const player of winningPlayers) {
     try {
-      db.updateKoin(player.id, WIN_REWARD.koin);
+      db.updateKoin(player.id, WIN_REWARD.coins);
       const user = db.getUser(player.id);
       if (user) {
         user.exp = (user.exp || 0) + WIN_REWARD.exp;
@@ -1039,7 +1039,7 @@ async function endGame(chatId, sock, db, winner) {
       .join("\n")}\n` +
     `╰┈┈┈┈┈┈┈┈⬡\n\n` +
     `╭┈┈⬡「 🎁 *REWARDS* 」\n` +
-    `┃ 💰 +${WIN_REWARD.koin.toLocaleString()} Koin\n` +
+    `┃ 💰 +${WIN_REWARD.coins.toLocaleString()} Coins\n` +
     `┃ ⭐ +${WIN_REWARD.exp.toLocaleString()} EXP\n` +
     `╰┈┈┈┈┈┈┈┈⬡\n\n` +
     `> GG WP! Play again? \`${config.command?.prefix || "."}ww create\``;
