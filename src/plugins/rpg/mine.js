@@ -9,7 +9,7 @@ const ORES = [
   { name: "⭐ Netherite", price: 20000, exp: 2000 },
 ];
 const pluginConfig = {
-  name: "mine", alias: ["mining", "nambang"], category: "rpg",
+  name: "mine", alias: ["mining"], category: "rpg",
   description: "Mine for ores and gems", usage: ".mine",
   example: ".mine", isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
   cooldown: 60, isEnabled: true,
