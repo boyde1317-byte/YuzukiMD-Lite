@@ -322,7 +322,7 @@ async function kyubigameAnswerHandler(m, sock) {
                 reportText += `With a deadly jutsu, you defeated *${session.monster}*!\n\n`;
                 reportText += `*🎁 MISSION REWARDS:*\n`;
                 reportText += `> ✨ EXP: *+${Math.floor(expReward)}*\n`;
-                reportText += `> 💰 Ryo (Koin): *+${ryoReward.toLocaleString()}*\n`;
+                reportText += `> 💰 Ryo (Coins): *+${ryoReward.toLocaleString()}*\n`;
 
                 if (droppedItems.length > 0) {
                     reportText += `\n*📦 SHINOBI LOOT:*\n`;
