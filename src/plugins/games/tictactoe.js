@@ -249,7 +249,7 @@ async function answerHandler(m, sock) {
   const db = getDatabase();
 
   // Handle surrender
-  if (text === "nyerah" || text === "surrender" || text === "give up") {
+  if (text === "surrender" || text === "give up") {
     const winner =
       m.sender === room.game.playerX ? room.game.playerO : room.game.playerX;
     const loser = m.sender;
@@ -278,7 +278,7 @@ async function answerHandler(m, sock) {
 
   // Check if it's player's turn
   if (room.game.currentTurn !== m.sender) {
-    await safeReply(m, "❌ Bukan giliranmu!");
+    await safeReply(m, "❌ It's not your turn!");
     return true;
   }
 
