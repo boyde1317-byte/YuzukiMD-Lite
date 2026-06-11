@@ -166,21 +166,15 @@ export class NativeFlowCard {
 
   async build(jid, opts = {}) {
     const card = await this._toCard();
+    // Use interactiveMessage directly (not wrapped in viewOnceMessage).
+    // Matches ourin-baileys builder approach.
     return generateWAMessageFromContent(
       jid,
       {
         ...this._extraPayload,
-        viewOnceMessage: {
-          message: {
-            messageContextInfo: {
-              deviceListMetadata: {},
-              deviceListMetadataVersion: 2,
-            },
-            interactiveMessage: {
-              ...card,
-              contextInfo: this._contextInfo,
-            },
-          },
+        interactiveMessage: {
+          ...card,
+          contextInfo: this._contextInfo,
         },
       },
       { ...opts }
@@ -189,8 +183,23 @@ export class NativeFlowCard {
 
   async send(jid, opts = {}) {
     const msg = await this.build(jid, opts);
+    // additionalNodes biz/interactive/native_flow tags are required for
+    // WhatsApp servers to render nativeFlowMessage buttons (ourin-baileys trick).
     await this.#sock.relayMessage(msg.key.remoteJid, msg.message, {
       messageId: msg.key.id,
+      additionalNodes: [
+        {
+          tag: "biz",
+          attrs: {},
+          content: [
+            {
+              tag: "interactive",
+              attrs: { type: "native_flow", v: "1" },
+              content: [{ tag: "native_flow", attrs: { v: "9", name: "mixed" } }],
+            },
+          ],
+        },
+      ],
       ...opts,
     });
     return msg;
