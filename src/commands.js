@@ -31,7 +31,7 @@ import { pushToGitHub, pullFromGitHub, getChangelog } from "./utils/github.js";
 import { card, toast, toggle, listCard, progress, previewCard } from "./utils/ui.js";
 import { CATEGORIES, buildMain, buildSub, buildListPayload, MENU_BG } from "./menu.js";
 // ── Yuzuki Plugin System ────────────────────────────────────────────────────
-import { getPlugin, getPluginStats } from "./lib/plugin-loader.js";
+import { getPlugin, getPluginStats, getPluginsByCategory } from "./lib/plugin-loader.js";
 import { createMessageObject } from "./lib/legacy-compat.js";
 // ── UI Tricks & Builders ──────────────────────────────────────────────────
 import { NativeFlowCard, ButtonV2, sendInteractive, sendButtons, sendList, buildNativeFlowWithOffer } from "./lib/yuzuki-builder.js";
@@ -406,127 +406,140 @@ export async function handleCommand({ sock, msg, command, args }) {
     case "allmenu": {
       await sock.sendMessage(jid, { react: { text: "⏱️", key: msg.key } });
       try {
-        const botName = settings.botName ?? "Yuzuki";
-        const totalCmds = Object.values(CATEGORIES).reduce((a, c) => a + c.commands.length, 0);
+        const botName = settings.botName ?? "Yuzuki MD";
 
-        // Build full caption — every category and every command
-        const fullCaption =
-          `🎐 *${botName} — Full Command List* 🎐\n` +
-          `┈┈┈┈୨♡୧┈┈┈┈\n\n` +
-          Object.values(CATEGORIES)
-            .map((cat) => {
-              const cmds = cat.commands.map((cmd) => `◦ *${prefix}${cmd}*`).join("\n");
-              return `${cat.icon} *${cat.title}*\n${cmds}`;
-            })
-            .join("\n\n") +
-          `\n\n┈┈┈┈୨♡୧┈┈┈┈\n` +
-          `✨ *${totalCmds} commands total* — Use *${prefix}menu <category>* for details.`;
+        // ── Time-based greeting (WIB = UTC+7) ──────────────────────────────
+        const _wibHour = new Date(Date.now() + 7 * 3600000).getUTCHours();
+        const _greeting =
+          _wibHour >= 4  && _wibHour < 10 ? "Selamat Pagi 🌅" :
+          _wibHour >= 10 && _wibHour < 15 ? "Selamat Siang ☀️" :
+          _wibHour >= 15 && _wibHour < 19 ? "Selamat Sore 🌇" :
+          "Selamat Malam 🌙";
 
-        // Fetch menu background via HTTP — MENU_BG is a URL, not a local file path.
-        // fs.readFileSync(url) throws ENOENT; must use fetch() instead.
-        const _MENU_THUMB = "https://www.upload.ee/image/19419994/file.jpg";
-        let imgBuf;
-        try {
-          const _imgSrc = settings.menuBgUrl || _MENU_THUMB;
-          const r = await fetch(_imgSrc);
-          if (r.ok) imgBuf = Buffer.from(await r.arrayBuffer());
-          else throw new Error(`HTTP ${r.status}`);
-        } catch {
+        // ── Small-caps + bracket-box helpers (Ourin allmenu style) ─────────
+        const _sc = (t) => {
+          const m = {a:"ᴀ",b:"ʙ",c:"ᴄ",d:"ᴅ",e:"ᴇ",f:"ꜰ",g:"ɢ",h:"ʜ",i:"ɪ",j:"ᴊ",k:"ᴋ",l:"ʟ",m:"ᴍ",n:"ɴ",o:"ᴏ",p:"ᴘ",q:"ǫ",r:"ʀ",s:"s",t:"ᴛ",u:"ᴜ",v:"ᴠ",w:"ᴡ",x:"x",y:"ʏ",z:"ᴢ"};
+          return t.toLowerCase().split("").map(c=>m[c]||c).join("");
+        };
+        const _box = (emoji, title, lines) => {
+          let s = `╭─〔 ${emoji} \`${title}\`\n`;
+          for (const l of lines) s += `┃ *${_sc(l)}*\n`;
+          return s + `╰─⬣\n\n`;
+        };
+
+        // ── Permission symbols per command ──────────────────────────────────
+        const _sym = (cmdName) => {
+          const p = getPlugin(cmdName);
+          if (!p?.config) return "";
+          const s = [];
+          if (p.config.isOwner)   s.push("Ⓞ");
+          if (p.config.isPremium) s.push("ⓟ");
+          if ((p.config.energi || 0) > 0 || getLimitCost(cmdName) > 0) s.push("Ⓛ");
+          if (p.config.isGroupAdmin || p.config.isBotAdmin) s.push("Ⓐ");
+          return s.length ? " " + s.join(" ") : "";
+        };
+
+        // ── Build body text from live plugin-loader data ────────────────────
+        const _CAT_EMOJIS = {
+          owner:"👑", main:"🏠", tools:"🛠️", canvas:"🎨",
+          fun:"🎮", games:"🎯", game:"🎯", rpg:"⚔️", store:"🏪",
+          search:"🔍", downloader:"📥", download:"📥", ai:"🤖",
+          group:"👥", utility:"🔧",
+        };
+        const _CAT_ORDER = ["owner","main","tools","canvas","fun","games","game","rpg","store","search","downloader","download","ai","group","utility"];
+        const _stats = getPluginStats();
+        const _sortedCats = [..._stats.categories].sort((a, b) => {
+          const ai = _CAT_ORDER.indexOf(a), bi = _CAT_ORDER.indexOf(b);
+          return (ai===-1?999:ai) - (bi===-1?999:bi);
+        });
+
+        let txt = _box("🤖", "KETERANGAN", [
+          "Ⓞ = Hanya untuk owner",
+          "ⓟ = Hanya untuk premium",
+          "Ⓛ = Membutuhkan limit",
+          "Ⓐ = Hanya untuk admin",
+        ]);
+
+        let totalPluginCmds = 0;
+        for (const cat of _sortedCats) {
+          if (cat === "owner" && !isOwner(senderJid, settings)) continue;
+          const plugins = getPluginsByCategory(cat);
+          if (!plugins.length) continue;
+          const emoji = _CAT_EMOJIS[cat] || "📋";
+          const lines = plugins.map(p => `${prefix}${p.config.name}${_sym(p.config.name)}`);
+          txt += _box(emoji, cat, lines);
+          totalPluginCmds += plugins.length;
+        }
+
+        // ── Fetch & upload image for interactive header (cached) ────────────
+        const _thumb = await getThumb("menu");
+        let _headerMedia = null;
+        if (_thumb) {
           try {
-            const r2 = await fetch(_MENU_THUMB);
-            if (r2.ok) imgBuf = Buffer.from(await r2.arrayBuffer());
-          } catch { imgBuf = null; }
+            _headerMedia = await prepareWAMessageMedia(
+              { image: _thumb },
+              { upload: sock.waUploadToServer }
+            );
+          } catch { /* header image optional */ }
         }
 
-        const vq = getVerifiedQuoted(settings);
-
-        // Single select rows — one per category, same as .menu
-        const menuRows = Object.entries(CATEGORIES).map(([key, cat]) => ({
-          title: `${cat.icon} ${cat.title}`,
-          description: `${cat.commands.length} commands`,
-          id: `${prefix}menu ${key}`,
-        }));
-
-        // Step 1: Send banner image + full caption — same plain sendMessage that .menu uses.
-        // prepareWAMessageMedia / CDN upload is skipped here to avoid hangs.
-        if (imgBuf) {
-          await sock.sendMessage(jid, {
-            image: imgBuf,
-            caption: fullCaption,
-            contextInfo: {
-              externalAdReply: {
-                title: botName,
-                body: `${totalCmds} commands available`,
-                thumbnail: imgBuf,
-                mediaType: 1,
-                renderLargerThumbnail: false,
-                sourceUrl: "https://github.com/boyde1317-byte/YuzukiMD-Lite",
-              },
-            },
-          }, { quoted: msg });
-        } else {
-          await reply(fullCaption);
-        }
-
-        // Step 2: Try a text-only interactive with a quick_reply + single_select.
-        // No image upload — header.hasMediaAttachment = false so no prepareWAMessageMedia call.
-        // If this fails for any reason the full menu is already delivered above.
-        try {
-          await sock.relayMessage(
-            jid,
-            {
-              viewOnceMessage: {
-                message: {
-                  messageContextInfo: {},
-                  interactiveMessage: {
-                    header: { hasMediaAttachment: false },
-                    body: { text: `📂 *Navigate by category:*` },
-                    footer: { text: `Powered by ${botName}` },
-                    contextInfo: {
-                      isForwarded: true,
-                      forwardingScore: 9,
-                      participant: "0@s.whatsapp.net",
-                      quotedMessage: { conversation: botName },
-                      mentionedJid: [],
-                    },
-                    nativeFlowMessage: {
-                      messageParamsJson: JSON.stringify({
-                        limited_time_offer: {
-                          text: botName,
-                          url: "Hai",
-                          copy_code: `${totalCmds} commands`,
-                          expiration_time: Date.now() + 1000000,
-                        },
-                      }),
-                      buttons: [
-                        {
-                          name: "quick_reply",
-                          buttonParamsJson: JSON.stringify({
-                            display_text: "🏠 Main Menu",
-                            id: `${prefix}menu`,
-                          }),
-                        },
-                        {
-                          name: "single_select",
-                          buttonParamsJson: JSON.stringify({
-                            title: "📋 Browse Categories",
-                            sections: [{ title: "Menu Categories", rows: menuRows }],
-                          }),
-                        },
-                      ],
-                    },
+        // ── Send interactive message (Ourin allmenu variant 2) ──────────────
+        await sock.relayMessage(
+          jid,
+          {
+            viewOnceMessage: {
+              message: {
+                messageContextInfo: {},
+                interactiveMessage: {
+                  header: _headerMedia?.imageMessage
+                    ? { title: "", subtitle: "", hasMediaAttachment: true, imageMessage: _headerMedia.imageMessage }
+                    : { hasMediaAttachment: false },
+                  body: { text: txt },
+                  footer: { text: `Ketik ${prefix}menu untuk kembali ke menu utama` },
+                  contextInfo: {
+                    isForwarded: true,
+                    forwardingScore: 9,
+                    participant: "0@s.whatsapp.net",
+                    quotedMessage: { conversation: botName },
+                    mentionedJid: [senderJid],
+                    ...(settings.channelId && settings.channelName ? {
+                      forwardedNewsletterMessageInfo: {
+                        newsletterJid: settings.channelId,
+                        serverMessageId: 127,
+                        newsletterName: settings.channelName,
+                      },
+                    } : {}),
+                  },
+                  nativeFlowMessage: {
+                    messageParamsJson: JSON.stringify({
+                      limited_time_offer: {
+                        text: _greeting,
+                        url: "Hai",
+                        copy_code: `Dibuat oleh ${botName}`,
+                        expiration_time: Date.now() + 1000000,
+                      },
+                    }),
+                    buttons: [
+                      {
+                        name: "quick_reply",
+                        buttonParamsJson: JSON.stringify({
+                          display_text: "🏠 Kembali Ke Menu Utama",
+                          id: `${prefix}menu`,
+                        }),
+                      },
+                    ],
                   },
                 },
               },
             },
-            {}
-          );
-        } catch { /* buttons optional — full menu already sent above */ }
+          },
+          {}
+        );
 
         await sock.sendMessage(jid, { react: { text: "✅", key: msg.key } });
       } catch (e) {
         await sock.sendMessage(jid, { react: { text: "❌", key: msg.key } });
-        await reply(`❌ allmenu failed: ${e.message}`);
+        await reply(`❌ allmenu error: ${e.message}`);
       }
       break;
     }
