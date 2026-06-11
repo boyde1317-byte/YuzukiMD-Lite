@@ -113,6 +113,16 @@ let reconnectTimer = null;
 let messageHandler = null; // FIX: Track event listener to prevent duplicates
 let _starting = false;    // guard: prevent concurrent startBot() calls
 
+// ── Exponential backoff reconnect state ───────────────────────────────────────
+const _RECONNECT = {
+  maxAttempts: 10,
+  initialDelay: 3000,
+  maxDelay: 60000,
+  multiplier: 1.5,
+};
+let _reconnectAttempts = 0;
+let _reconnectDelay    = _RECONNECT.initialDelay;
+
 // ── Anti-delete message cache ─────────────────────────────────────────────────
 // Stores recent messages so they can be re-sent if deleted.
 // Keyed by msgId. Capped at 500 entries (FIFO) to avoid unbounded memory growth.
@@ -321,15 +331,26 @@ async function _startBotImpl() {
       log.discon(`status=${chalk.yellow(statusCode)} reconnect=${chalk.cyan(shouldReconnect)}`);
 
       if (shouldReconnect) {
+        if (_reconnectAttempts >= _RECONNECT.maxAttempts) {
+          logger.error("Reconnect limit reached — giving up");
+          process.exit(1);
+        }
+        const delay = Math.min(_reconnectDelay, _RECONNECT.maxDelay);
+        _reconnectDelay = Math.min(_reconnectDelay * _RECONNECT.multiplier, _RECONNECT.maxDelay);
+        _reconnectAttempts++;
+        log.discon(`reconnecting in ${(delay / 1000).toFixed(1)}s (attempt ${_reconnectAttempts}/${_RECONNECT.maxAttempts})`);
         if (reconnectTimer) clearTimeout(reconnectTimer);
         reconnectTimer = setTimeout(() => {
-          // _starting guard in startBot() prevents duplicate restarts
           startBot().catch((err) => logger.error({ err }, "Failed to restart bot"));
-        }, 5000);
+        }, delay);
       }
     }
 
     if (connection === "open") {
+      // Reset exponential backoff on successful connection
+      _reconnectAttempts = 0;
+      _reconnectDelay    = _RECONNECT.initialDelay;
+
       state.connected = true;
       state.pairingCode = null;
       state.startedAt = new Date();
