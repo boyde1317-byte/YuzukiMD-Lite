@@ -124,25 +124,40 @@ function bjVal(h){let v=0,a=0;for(const c of h){const r=c.slice(0,-1);if(r==="A"
 // ── Per-command thumbnail helper ──────────────────────────────────────────────
 // Looks for src/assets/<name>.(jpg|png|jpeg|webp). Falls back to MENU_BG.
 // MENU_BG may be an HTTPS URL (GitHub CDN) — fetch it via HTTP in that case.
+// Results are cached in memory so CDN is only hit once per key per process lifetime.
+const _thumbCache = new Map();
+
 async function getThumb(name) {
+  if (_thumbCache.has(name)) return _thumbCache.get(name);
+
   const isUrl = (s) => /^https?:\/\//i.test(s);
+  let result = null;
+
   if (!isUrl(MENU_BG)) {
     const dir = path.dirname(MENU_BG);
     for (const ext of ["jpg", "png", "jpeg", "webp"]) {
       const p = path.join(dir, `${name}.${ext}`);
-      if (fs.existsSync(p)) return fs.readFileSync(p);
+      if (fs.existsSync(p)) { result = fs.readFileSync(p); break; }
     }
-    if (fs.existsSync(MENU_BG)) return fs.readFileSync(MENU_BG);
-    return null;
+    if (!result && fs.existsSync(MENU_BG)) result = fs.readFileSync(MENU_BG);
+  } else {
+    // URL-based assets (GitHub Releases CDN) — fetch once, cache forever
+    if (_thumbCache.has("__menu_bg__")) {
+      result = _thumbCache.get("__menu_bg__");
+    } else {
+      try {
+        const { default: axios } = await import("axios");
+        const res = await axios.get(MENU_BG, { responseType: "arraybuffer", timeout: 8000 });
+        result = Buffer.from(res.data);
+        _thumbCache.set("__menu_bg__", result);
+      } catch {
+        result = null;
+      }
+    }
   }
-  // URL-based assets (GitHub Releases CDN)
-  try {
-    const { default: axios } = await import("axios");
-    const res = await axios.get(MENU_BG, { responseType: "arraybuffer", timeout: 8000 });
-    return Buffer.from(res.data);
-  } catch {
-    return null;
-  }
+
+  if (result) _thumbCache.set(name, result);
+  return result;
 }
 
 const OWNER_COMMANDS = new Set([
