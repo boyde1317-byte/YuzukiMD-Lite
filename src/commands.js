@@ -416,54 +416,71 @@ export async function handleCommand({ sock, msg, command, args }) {
           id: `${prefix}menu ${key}`,
         }));
 
-        // Try interactive image + single_select (mirrors .menu behaviour)
-        try {
-          const mediaHeader = await prepareWAMessageMedia(
-            { image: imgBuf },
-            { upload: sock.waUploadToServer }
-          );
-          const interactiveMsg = generateWAMessageFromContent(jid, {
-            viewOnceMessage: {
-              message: {
-                messageContextInfo: { deviceListMetadata: {}, deviceListMetadataVersion: 2 },
-                interactiveMessage: {
-                  contextInfo: {
-                    externalAdReply: {
-                      title: botName,
-                      body: `${totalCmds} commands available`,
-                      thumbnail: imgBuf,
-                      mediaType: 1,
-                      renderLargerThumbnail: false,
-                      sourceUrl: "https://github.com/KyokaAizen665/Yuzuki-Md-V2",
+        // OURIN-style: prepareWAMessageMedia + raw viewOnceMessage relayMessage.
+        // No generateWAMessageFromContent — build the proto directly, same as ourin-baileys menu.js.
+        // Fallback to plain image+caption if the interactive send fails.
+        if (imgBuf) {
+          try {
+            const mediaHeader = await prepareWAMessageMedia(
+              { image: imgBuf },
+              { upload: sock.waUploadToServer }
+            );
+            await sock.relayMessage(
+              jid,
+              {
+                viewOnceMessage: {
+                  message: {
+                    messageContextInfo: {},
+                    interactiveMessage: {
+                      header: {
+                        title: "",
+                        subtitle: "",
+                        hasMediaAttachment: true,
+                        imageMessage: mediaHeader.imageMessage,
+                      },
+                      body: { text: fullCaption },
+                      footer: { text: `Powered by ${botName}` },
+                      contextInfo: {
+                        isForwarded: true,
+                        forwardingScore: 9,
+                        participant: "0@s.whatsapp.net",
+                        quotedMessage: { conversation: botName },
+                        mentionedJid: [],
+                      },
+                      nativeFlowMessage: {
+                        messageParamsJson: JSON.stringify({
+                          limited_time_offer: {
+                            text: botName,
+                            url: "Hai",
+                            copy_code: `${totalCmds} commands`,
+                            expiration_time: Date.now() + 1000000,
+                          },
+                        }),
+                        buttons: [
+                          {
+                            name: "quick_reply",
+                            buttonParamsJson: JSON.stringify({
+                              display_text: "📂 Back to Main Menu",
+                              id: `${prefix}menu`,
+                            }),
+                          },
+                          {
+                            name: "single_select",
+                            buttonParamsJson: JSON.stringify({
+                              title: "📋 Browse Categories",
+                              sections: [{ title: "Menu Categories", rows: menuRows }],
+                            }),
+                          },
+                        ],
+                      },
                     },
-                    quotedMessage: vq.message,
-                    participant: vq.key.participant,
-                    remoteJid: vq.key.remoteJid,
-                  },
-                  body: { text: fullCaption },
-                  footer: { text: `Powered by ${botName}` },
-                  header: { title: "", subtitle: "", hasMediaAttachment: true, ...mediaHeader },
-                  nativeFlowMessage: {
-                    buttons: [{
-                      name: "single_select",
-                      buttonParamsJson: JSON.stringify({
-                        title: "📂 Browse Categories",
-                        sections: [{ title: "Menu Categories", rows: menuRows }],
-                      }),
-                    }],
                   },
                 },
               },
-            },
-          }, { quoted: msg }, {});
-          await sock.relayMessage(
-            interactiveMsg.key.remoteJid,
-            interactiveMsg.message,
-            { messageId: interactiveMsg.key.id }
-          );
-        } catch {
-          // Fallback — plain image with caption, or text-only if no image available
-          if (imgBuf) {
+              {}
+            );
+          } catch {
+            // Fallback — plain image+caption
             await sock.sendMessage(jid, {
               image: imgBuf,
               caption: fullCaption,
@@ -474,16 +491,13 @@ export async function handleCommand({ sock, msg, command, args }) {
                   thumbnail: imgBuf,
                   mediaType: 1,
                   renderLargerThumbnail: false,
-                  sourceUrl: "https://github.com/KyokaAizen665/Yuzuki-Md-V2",
+                  sourceUrl: "https://github.com/boyde1317-byte/YuzukiMD-Lite",
                 },
-                quotedMessage: vq.message,
-                participant: vq.key.participant,
-                remoteJid: vq.key.remoteJid,
               },
-            }, { quoted: vq });
-          } else {
-            await reply(fullCaption);
+            }, { quoted: msg });
           }
+        } else {
+          await reply(fullCaption);
         }
 
         await sock.sendMessage(jid, { react: { text: "✅", key: msg.key } });
