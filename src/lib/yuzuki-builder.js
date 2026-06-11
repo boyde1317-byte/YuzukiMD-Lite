@@ -1,14 +1,15 @@
 /**
  * YuzukiBuilder — WhatsApp Interactive Message Builder
  *
- * Ported & adapted from Yuzuki MD's NIXCODE builder by Nixel.
- * Integrated into Yuzuki MD V2 by the merge team.
+ * Ported & adapted from OURIN MD 3's NIXCODE builder by Nixel.
+ * Integrated into Yuzuki MD V2.
  *
  * Supports:
- *   - NativeFlowCard   → Interactive cards with buttons (CTA, quick_reply, select, copy)
+ *   - NativeFlowCard   → Interactive cards with all button types
  *   - ButtonV2         → Legacy buttonsMessage (up to 3 buttons)
  *   - ListMessage      → WhatsApp list message with sections
  *   - send helpers     → sendInteractive(), sendButtons(), sendList()
+ *   - buildNativeFlowWithOffer() → raw nativeFlowMessage with offer badge + list
  */
 
 import {
@@ -31,6 +32,7 @@ async function resizeImage(buf, w = 300, h = 300) {
 }
 
 // ─── NativeFlowCard ──────────────────────────────────────────────────────────
+// Mirrors OURIN MD 3's Button class (ourin-builder.js / NIXCODE by Nixel)
 
 export class NativeFlowCard {
   #sock;
@@ -43,11 +45,12 @@ export class NativeFlowCard {
     this._body = "";
     this._footer = "";
     this._buttons = [];
-    this._data = null;        // media payload
+    this._data = null;
     this._contextInfo = {};
     this._extraPayload = {};
     this._params = {};
-    this._copyCode = "";         // offer badge copy code
+    this._currentSelectionIndex = -1;
+    this._currentSectionIndex = -1;
   }
 
   setTitle(v) { this._title = v; return this; }
@@ -59,41 +62,92 @@ export class NativeFlowCard {
   setExtra(obj) { this._extraPayload = { ...this._extraPayload, ...obj }; return this; }
 
   /**
-   * Activate the WhatsApp offer badge (the 🏷️ tag icon with expiry date and copy code).
-   * Sets messageParamsJson so WhatsApp renders the offer frame around the header.
-   * @param {number} [durationMs]  How long before it shows "Offer ended". Default = never.
-   * @param {string} [copyCode]    Text shown as "Code: <copyCode>" inside the badge.
+   * Set raw messageParamsJson object.
+   * Supports: limited_time_offer, bottom_sheet, tap_target_configuration.
+   * @param {object} obj
    */
-  setOffer(durationMs = 99999999999, copyCode = "") {
-    const nowSec = Math.floor(Date.now() / 1000);
-    this._params = { from: nowSec, to: nowSec + Math.floor(durationMs / 1000) };
-    if (copyCode) this._copyCode = copyCode;
+  setParams(obj) {
+    this._params = obj;
     return this;
   }
 
   /**
-   * Add a CTA URL button
-   * @param {string} label
-   * @param {string} url
-   * @param {string} [merchantUrl]
+   * Activate the WhatsApp offer badge (🏷️ tag icon with expiry + copy code).
+   * Sets limited_time_offer in messageParamsJson — matches OURIN MD 3 structure.
+   *
+   * @param {object|number} [optsOrDurationMs]
+   *   Pass an object { text, copyCode, durationMs, url } or a legacy durationMs number.
+   * @param {string} [legacyCopyCode]  Legacy second arg for back-compat: setOffer(ms, code)
    */
-  addCtaUrl(label, url, merchantUrl = url) {
+  setOffer(optsOrDurationMs = {}, legacyCopyCode = "") {
+    let text = "", copyCode = "", durationMs = 3_600_000, url = "https://ourin.site";
+    if (typeof optsOrDurationMs === "number") {
+      durationMs = optsOrDurationMs;
+      copyCode = legacyCopyCode;
+    } else {
+      ({ text = "", copyCode = "", durationMs = 3_600_000, url = "https://ourin.site" } = optsOrDurationMs);
+    }
+    this._params = {
+      ...this._params,
+      limited_time_offer: {
+        text,
+        url,
+        copy_code: copyCode,
+        expiration_time: Date.now() + durationMs,
+      },
+    };
+    if (copyCode) this._subtitle = copyCode;
+    return this;
+  }
+
+  /**
+   * Activate bottom_sheet mode — controls the "📋 More" button label and list header.
+   * @param {object} opts
+   * @param {string}   [opts.listTitle]           — Section header inside the dropdown
+   * @param {string}   [opts.buttonTitle]         — Label on the "open list" button
+   * @param {number}   [opts.inThreadButtonsLimit] — How many buttons show inline (default 2)
+   * @param {number[]} [opts.dividerIndices]       — Where to draw dividers (default [1,2,…,999])
+   */
+  setBottomSheet({ listTitle = "", buttonTitle = "📋 More", inThreadButtonsLimit = 2, dividerIndices = [1, 2, 3, 4, 5, 999] } = {}) {
+    this._params = {
+      ...this._params,
+      bottom_sheet: {
+        in_thread_buttons_limit: inThreadButtonsLimit,
+        divider_indices: dividerIndices,
+        list_title: listTitle,
+        button_title: buttonTitle,
+      },
+    };
+    return this;
+  }
+
+  // ── Button type: generic ──────────────────────────────────────────────────
+
+  addButton(name, params) {
+    this._buttons.push({
+      name,
+      buttonParamsJson: typeof params === "string" ? params : JSON.stringify(params),
+    });
+    return this;
+  }
+
+  // ── Button type: cta_url ─────────────────────────────────────────────────
+
+  addCtaUrl(label, url, merchantUrl = url, webviewInteraction = false) {
     this._buttons.push({
       name: "cta_url",
       buttonParamsJson: JSON.stringify({
         display_text: label,
         url,
         merchant_url: merchantUrl,
+        webview_interaction: webviewInteraction,
       }),
     });
     return this;
   }
 
-  /**
-   * Add a Copy button
-   * @param {string} label
-   * @param {string} textToCopy
-   */
+  // ── Button type: cta_copy ────────────────────────────────────────────────
+
   addCtaCopy(label, textToCopy) {
     this._buttons.push({
       name: "cta_copy",
@@ -105,44 +159,141 @@ export class NativeFlowCard {
     return this;
   }
 
-  /**
-   * Add a quick reply button
-   * @param {string} label
-   * @param {string} [id]
-   */
+  // ── Button type: quick_reply ─────────────────────────────────────────────
+
   addQuickReply(label, id = crypto.randomUUID()) {
     this._buttons.push({
       name: "quick_reply",
+      buttonParamsJson: JSON.stringify({ display_text: label, id }),
+    });
+    return this;
+  }
+
+  // ── Button type: cta_call ────────────────────────────────────────────────
+
+  addCall(label, phoneNumber) {
+    this._buttons.push({
+      name: "cta_call",
+      buttonParamsJson: JSON.stringify({ display_text: label, id: phoneNumber }),
+    });
+    return this;
+  }
+
+  // ── Button type: cta_reminder ────────────────────────────────────────────
+
+  addReminder(label, id = crypto.randomUUID()) {
+    this._buttons.push({
+      name: "cta_reminder",
+      buttonParamsJson: JSON.stringify({ display_text: label, id }),
+    });
+    return this;
+  }
+
+  // ── Button type: cta_cancel_reminder ─────────────────────────────────────
+
+  addCancelReminder(label, id = crypto.randomUUID()) {
+    this._buttons.push({
+      name: "cta_cancel_reminder",
+      buttonParamsJson: JSON.stringify({ display_text: label, id }),
+    });
+    return this;
+  }
+
+  // ── Button type: address_message ─────────────────────────────────────────
+
+  addAddress(label, id = crypto.randomUUID()) {
+    this._buttons.push({
+      name: "address_message",
+      buttonParamsJson: JSON.stringify({ display_text: label, id }),
+    });
+    return this;
+  }
+
+  // ── Button type: send_location ───────────────────────────────────────────
+
+  addLocation(opts = {}) {
+    this._buttons.push({
+      name: "send_location",
+      buttonParamsJson: JSON.stringify(opts),
+    });
+    return this;
+  }
+
+  // ── Button type: single_select (simple one-call) ──────────────────────────
+
+  /**
+   * Add a single-select dropdown in one call.
+   * @param {string} label  — Button label
+   * @param {string} sectionTitle — Section header
+   * @param {Array<{id?:string,title:string,description?:string,header?:string}>} rows
+   */
+  addSelect(label, sectionTitle, rows = []) {
+    this._buttons.push({
+      name: "single_select",
       buttonParamsJson: JSON.stringify({
-        display_text: label,
-        id,
+        title: label,
+        sections: [{ title: sectionTitle, rows }],
       }),
     });
     return this;
   }
 
+  // ── Button type: single_select (fluent builder) ───────────────────────────
+
   /**
-   * Add a single-select dropdown
-   * @param {string} label       — Button label
-   * @param {string} title       — Dropdown title
-   * @param {Array<{id:string,title:string,description?:string}>} rows
+   * Start a new single_select button (fluent).
+   * Chain .makeSection() → .makeRow() to fill it.
+   * @param {string} title — Button label shown in the "More" sheet
+   * @param {object} [opts] — Extra buttonParamsJson fields, e.g. { has_multiple_buttons: true }
    */
-  addSelect(label, title, rows = []) {
+  addSelection(title, opts = {}) {
     this._buttons.push({
       name: "single_select",
-      buttonParamsJson: JSON.stringify({
-        title: label,
-        sections: [{ title, rows }],
-      }),
+      buttonParamsJson: JSON.stringify({ title, sections: [], ...opts }),
     });
+    this._currentSelectionIndex = this._buttons.length - 1;
+    this._currentSectionIndex = -1;
     return this;
   }
+
+  /**
+   * Add a section to the most recent addSelection().
+   * @param {string} [title]
+   * @param {string} [highlightLabel]
+   */
+  makeSection(title = "", highlightLabel = "") {
+    if (this._currentSelectionIndex === -1) throw new Error("Call addSelection() first");
+    const p = JSON.parse(this._buttons[this._currentSelectionIndex].buttonParamsJson);
+    p.sections.push({ title, highlight_label: highlightLabel, rows: [] });
+    this._currentSectionIndex = p.sections.length - 1;
+    this._buttons[this._currentSelectionIndex].buttonParamsJson = JSON.stringify(p);
+    return this;
+  }
+
+  /**
+   * Add a row to the most recent makeSection().
+   * @param {string} [header]
+   * @param {string} [title]
+   * @param {string} [description]
+   * @param {string} [id]
+   */
+  makeRow(header = "", title = "", description = "", id = crypto.randomUUID()) {
+    if (this._currentSelectionIndex === -1 || this._currentSectionIndex === -1) {
+      throw new Error("Call addSelection() then makeSection() first");
+    }
+    const p = JSON.parse(this._buttons[this._currentSelectionIndex].buttonParamsJson);
+    p.sections[this._currentSectionIndex].rows.push({ header, title, description, id });
+    this._buttons[this._currentSelectionIndex].buttonParamsJson = JSON.stringify(p);
+    return this;
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
 
   async _toCard() {
     return {
       header: {
         title: this._title,
-        subtitle: this._copyCode || this._subtitle,
+        subtitle: this._subtitle,
         hasMediaAttachment: !!this._data,
         ...(this._data
           ? await prepareWAMessageMedia(this._data, {
@@ -164,8 +315,6 @@ export class NativeFlowCard {
 
   async build(jid, opts = {}) {
     const card = await this._toCard();
-    // Use interactiveMessage directly (not wrapped in viewOnceMessage).
-    // Matches ourin-baileys builder approach.
     return generateWAMessageFromContent(
       jid,
       {
@@ -181,8 +330,6 @@ export class NativeFlowCard {
 
   async send(jid, opts = {}) {
     const msg = await this.build(jid, opts);
-    // additionalNodes biz/interactive/native_flow tags are required for
-    // WhatsApp servers to render nativeFlowMessage buttons (ourin-baileys trick).
     await this.#sock.relayMessage(msg.key.remoteJid, msg.message, {
       messageId: msg.key.id,
       additionalNodes: [
@@ -282,6 +429,19 @@ export class ButtonV2 {
     const msg = await this.build(jid, opts);
     await this.#sock.relayMessage(msg.key.remoteJid, msg.message, {
       messageId: msg.key.id,
+      additionalNodes: [
+        {
+          tag: "biz",
+          attrs: {},
+          content: [
+            {
+              tag: "interactive",
+              attrs: { type: "native_flow", v: "1" },
+              content: [{ tag: "native_flow", attrs: { v: "9", name: "mixed" } }],
+            },
+          ],
+        },
+      ],
       ...opts,
     });
     return msg;
@@ -310,10 +470,6 @@ export class ListMessage {
   setButtonText(v) { this._buttonText = v; return this; }
   setContext(obj) { this._contextInfo = { ...this._contextInfo, ...obj }; return this; }
 
-  /**
-   * @param {string} sectionTitle
-   * @param {Array<{rowId:string,title:string,description?:string}>} rows
-   */
   addSection(sectionTitle, rows) {
     this._sections.push({ title: sectionTitle, rows });
     return this;
@@ -340,13 +496,6 @@ export class ListMessage {
 
 // ─── Convenience helpers ──────────────────────────────────────────────────────
 
-/**
- * Quick NativeFlowCard with one or more CTA URL buttons.
- *
- * @param {object} sock
- * @param {string} jid
- * @param {{ title, body, footer, buttons: Array<{label,url}>, media? }} opts
- */
 export async function sendInteractive(sock, jid, { title = "", body, footer = "", buttons = [], media = null } = {}) {
   const card = new NativeFlowCard(sock).setTitle(title).setBody(body).setFooter(footer);
   if (media) card.setMedia(media);
@@ -354,18 +503,12 @@ export async function sendInteractive(sock, jid, { title = "", body, footer = ""
     if (btn.type === "copy")     card.addCtaCopy(btn.label, btn.value);
     else if (btn.type === "select") card.addSelect(btn.label, btn.title || "Options", btn.rows || []);
     else if (btn.type === "reply")  card.addQuickReply(btn.label, btn.id);
+    else if (btn.type === "call")   card.addCall(btn.label, btn.phone ?? btn.id);
     else card.addCtaUrl(btn.label, btn.url, btn.merchantUrl);
   }
   return card.send(jid);
 }
 
-/**
- * Quick ButtonV2 (legacy, max 3 buttons).
- *
- * @param {object} sock
- * @param {string} jid
- * @param {{ title, subtitle, body, footer, buttons: Array<{text,id}>, thumbnail? }} opts
- */
 export async function sendButtons(sock, jid, { title = "", subtitle = "", body, footer = "", buttons = [], thumbnail = null } = {}) {
   const b = new ButtonV2(sock)
     .setTitle(title)
@@ -377,13 +520,6 @@ export async function sendButtons(sock, jid, { title = "", subtitle = "", body, 
   return b.send(jid);
 }
 
-/**
- * Quick ListMessage.
- *
- * @param {object} sock
- * @param {string} jid
- * @param {{ title, body, footer, buttonText, sections }} opts
- */
 export async function sendList(sock, jid, { title = "", body, footer = "", buttonText = "Select", sections = [] } = {}) {
   const l = new ListMessage(sock)
     .setTitle(title)
@@ -395,56 +531,94 @@ export async function sendList(sock, jid, { title = "", body, footer = "", butto
 }
 
 /**
- * Build a raw nativeFlowMessage object with an offer badge and a single_select
- * list button in one call. The returned object can be destructured directly:
+ * Build a raw nativeFlowMessage object with an offer badge + bottom_sheet list.
+ * Matches OURIN MD 3's messageParamsJson structure exactly.
  *
- *   const { nativeFlowMessage } = buildNativeFlowWithOffer({ ... });
- *
- * and then used inside an interactiveMessage payload.
+ * Usage:
+ *   const { nativeFlowMessage } = buildNativeFlowWithOffer({
+ *     text: "Good Evening 🌙",
+ *     copyCode: "Yuzuki MD",
+ *     durationMs: 3600000,
+ *     listTitle: "Pick a category",
+ *     buttonTitle: "📋 More",
+ *     buttons: [{ id: ".menu", title: "Main Menu" }],
+ *   });
+ *   // then use nativeFlowMessage inside your interactiveMessage payload
  *
  * @param {object} opts
- * @param {string}   [opts.text]        — Body / header text (returned as-is for callers that need it)
- * @param {string}   [opts.copyCode]    — Offer copy-code shown in the 🏷️ badge
- * @param {number}   [opts.durationMs]  — How long the offer lasts in ms (default 1 hour)
- * @param {string}   [opts.listTitle]   — Section title inside the dropdown list
- * @param {string}   [opts.buttonTitle] — Label on the "open list" button
- * @param {Array}    [opts.buttons]     — Rows: each { id?, command?, title?, name?, label?, description?, desc? }
- * @returns {{ text: string, copyCode: string, nativeFlowMessage: object }}
+ * @param {string}   [opts.text]              — Offer badge text (shown in 🏷️ overlay)
+ * @param {string}   [opts.copyCode]          — Copy-code inside the badge
+ * @param {number}   [opts.durationMs]        — Offer lifetime in ms (default 1 hour)
+ * @param {string}   [opts.offerUrl]          — URL for the offer badge (default ourin.site)
+ * @param {string}   [opts.listTitle]         — Section header in the dropdown list
+ * @param {string}   [opts.buttonTitle]       — Label on the "open list" button
+ * @param {number}   [opts.inThreadLimit]     — Inline button count before sheet (default 2)
+ * @param {Array}    [opts.buttons]           — Rows: { id?, command?, title?, name?, label?, description? }
+ * @param {Array}    [opts.extraButtons]      — Additional buttons appended after the single_select
+ * @returns {{ text, copyCode, nativeFlowMessage }}
  */
 export function buildNativeFlowWithOffer({
   text = "",
   copyCode = "",
   durationMs = 3_600_000,
+  offerUrl = "https://ourin.site",
   listTitle = "",
   buttonTitle = "📋 More",
+  inThreadLimit = 2,
   buttons = [],
+  extraButtons = [],
 } = {}) {
-  const nowSec = Math.floor(Date.now() / 1000);
   const params = {
-    from: nowSec,
-    to: nowSec + Math.floor(durationMs / 1000),
+    limited_time_offer: {
+      text,
+      url: offerUrl,
+      copy_code: copyCode,
+      expiration_time: Date.now() + durationMs,
+    },
+    bottom_sheet: {
+      in_thread_buttons_limit: inThreadLimit,
+      divider_indices: [1, 2, 3, 4, 5, 999],
+      list_title: listTitle,
+      button_title: buttonTitle,
+    },
+    tap_target_configuration: {
+      title: " X ",
+      description: "Yuzuki MD",
+      canonical_url: offerUrl,
+      domain: "ourin.site",
+      button_index: 0,
+    },
   };
 
   const rows = buttons.map((btn) => ({
     id: btn.id ?? btn.command ?? btn.rowId ?? crypto.randomUUID(),
     title: btn.title ?? btn.name ?? btn.label ?? "",
     description: btn.description ?? btn.desc ?? "",
+    header: btn.header ?? "",
   }));
 
   const nativeButtons = [];
+
   if (rows.length > 0) {
     nativeButtons.push({
       name: "single_select",
-      buttonParamsJson: JSON.stringify({
-        title: buttonTitle,
-        sections: [{ title: listTitle, rows }],
-      }),
+      buttonParamsJson: JSON.stringify({ has_multiple_buttons: true }),
+    });
+  }
+
+  for (const eb of extraButtons) {
+    nativeButtons.push({
+      name: eb.name,
+      buttonParamsJson: typeof eb.buttonParamsJson === "string"
+        ? eb.buttonParamsJson
+        : JSON.stringify(eb.buttonParamsJson ?? {}),
     });
   }
 
   return {
     text,
     copyCode,
+    rows,
     nativeFlowMessage: {
       messageParamsJson: JSON.stringify(params),
       buttons: nativeButtons,
