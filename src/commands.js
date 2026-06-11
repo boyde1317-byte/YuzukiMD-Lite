@@ -459,30 +459,35 @@ export async function handleCommand({ sock, msg, command, args }) {
           return (ai===-1?999:ai) - (bi===-1?999:bi);
         });
 
-        // ── Build body text ─────────────────────────────────────────────────
-        let txt = _box("🤖", "LEGEND", [
-          "Ⓞ = Owner only",
-          "ⓟ = Premium only",
-          "Ⓛ = Requires limit",
-          "Ⓐ = Admin only",
-        ]);
-
+        // ── Build body: short legend + per-category count summary ───────────
+        // Full command list is too long for interactive messages (~4096 char limit).
+        // Show a concise overview; user browses via the single_select dropdown.
         const _visibleCats = [];
+        let _totalCmds = 0;
         for (const cat of _sortedCats) {
           if (cat === "owner" && !isOwner(senderJid, settings)) continue;
           const plugins = getPluginsByCategory(cat);
           if (!plugins.length) continue;
           _visibleCats.push(cat);
-          const emoji = _CAT_EMOJIS[cat] || "📋";
-          const lines = plugins.map(p => `${prefix}${p.config.name}${_sym(p.config.name)}`);
-          txt += _box(emoji, cat, lines);
+          _totalCmds += plugins.length;
         }
+
+        const _catSummary = _visibleCats
+          .map(cat => `${_CAT_EMOJIS[cat] || "📋"} ${cat.charAt(0).toUpperCase() + cat.slice(1)} — ${getPluginsByCategory(cat).length} cmds`)
+          .join("\n");
+
+        const txt =
+          `✦ *${botName}* · ${_totalCmds} commands\n\n` +
+          `*LEGEND*\n` +
+          `Ⓞ Owner only  ⓟ Premium only  Ⓛ Needs limit  Ⓐ Admin only\n\n` +
+          `*Categories*\n${_catSummary}\n\n` +
+          `Tap *Browse Categories* below to explore.`;
 
         // ── Build single_select rows from categories ────────────────────────
         const _selectRows = _visibleCats.map(cat => ({
           id: `${prefix}menu ${cat}`,
           title: `${_CAT_EMOJIS[cat] || "📋"} ${cat.charAt(0).toUpperCase() + cat.slice(1)}`,
-          description: `View ${cat} commands`,
+          description: `${getPluginsByCategory(cat).length} commands`,
         }));
 
         // ── Send via NativeFlowCard (proper OURIN MD 3 format) ──────────────
