@@ -9,7 +9,7 @@ const PREY = [
   { name: "🐉 Dragon", price: 50000, exp: 10000 },
 ];
 const pluginConfig = {
-  name: "hunt", alias: ["berburu"], category: "rpg",
+  name: "hunt", alias: [], category: "rpg",
   description: "Go hunting for wild animals", usage: ".hunt",
   example: ".hunt", isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
   cooldown: 120, isEnabled: true,
