@@ -336,7 +336,7 @@ async function dungeonAnswerHandler(m, sock) {
                 reportText += `With a deadly strike, you slew *${session.monster}*!\n\n`;
                 reportText += `*🎁 REWARDS EARNED:*\n`;
                 reportText += `> ✨ EXP: *+${Math.floor(expReward)}*\n`;
-                reportText += `> 💰 Koin: *+${goldReward.toLocaleString()}*\n`;
+                reportText += `> 💰 Coins: *+${goldReward.toLocaleString()}*\n`;
 
                 if (droppedItems.length > 0) {
                     reportText += `\n*📦 LOOTED ITEMS:*\n`;
