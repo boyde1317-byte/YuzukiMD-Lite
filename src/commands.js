@@ -31,7 +31,7 @@ import { CATEGORIES, buildMain, buildSub, buildListPayload, MENU_BG } from "./me
 import { getPlugin, getPluginStats } from "./lib/plugin-loader.js";
 import { createMessageObject } from "./lib/legacy-compat.js";
 // ── UI Tricks & Builders ──────────────────────────────────────────────────
-import { NativeFlowCard, ButtonV2, sendInteractive, sendButtons, sendList } from "./lib/yuzuki-builder.js";
+import { NativeFlowCard, ButtonV2, sendInteractive, sendButtons, sendList, buildNativeFlowWithOffer } from "./lib/yuzuki-builder.js";
 import { sendForwarded, sendAdReply, sendNewsletterStyle, sendAnnouncementCard, sendPremiumStyle } from "./lib/msg-tricks.js";
 import { broadcastJPM, broadcastText } from "./lib/jpm.js";
 import { sendContact, sendMultiContact, sendFakeContact, createFakeQuoted, sendWithFakeQuote, sendWithTyping, sendWithRecording, sendLocation, FAKE_LOCATIONS, sendPoll, sendReaction, sendEphemeral, sendWithPreview, sendCarousel, sendVoiceNote, sendGif } from "./lib/msg-types.js";

@@ -393,3 +393,61 @@ export async function sendList(sock, jid, { title = "", body, footer = "", butto
   for (const s of sections) l.addSection(s.title, s.rows);
   return l.send(jid);
 }
+
+/**
+ * Build a raw nativeFlowMessage object with an offer badge and a single_select
+ * list button in one call. The returned object can be destructured directly:
+ *
+ *   const { nativeFlowMessage } = buildNativeFlowWithOffer({ ... });
+ *
+ * and then used inside an interactiveMessage payload.
+ *
+ * @param {object} opts
+ * @param {string}   [opts.text]        — Body / header text (returned as-is for callers that need it)
+ * @param {string}   [opts.copyCode]    — Offer copy-code shown in the 🏷️ badge
+ * @param {number}   [opts.durationMs]  — How long the offer lasts in ms (default 1 hour)
+ * @param {string}   [opts.listTitle]   — Section title inside the dropdown list
+ * @param {string}   [opts.buttonTitle] — Label on the "open list" button
+ * @param {Array}    [opts.buttons]     — Rows: each { id?, command?, title?, name?, label?, description?, desc? }
+ * @returns {{ text: string, copyCode: string, nativeFlowMessage: object }}
+ */
+export function buildNativeFlowWithOffer({
+  text = "",
+  copyCode = "",
+  durationMs = 3_600_000,
+  listTitle = "",
+  buttonTitle = "📋 More",
+  buttons = [],
+} = {}) {
+  const nowSec = Math.floor(Date.now() / 1000);
+  const params = {
+    from: nowSec,
+    to: nowSec + Math.floor(durationMs / 1000),
+  };
+
+  const rows = buttons.map((btn) => ({
+    id: btn.id ?? btn.command ?? btn.rowId ?? crypto.randomUUID(),
+    title: btn.title ?? btn.name ?? btn.label ?? "",
+    description: btn.description ?? btn.desc ?? "",
+  }));
+
+  const nativeButtons = [];
+  if (rows.length > 0) {
+    nativeButtons.push({
+      name: "single_select",
+      buttonParamsJson: JSON.stringify({
+        title: buttonTitle,
+        sections: [{ title: listTitle, rows }],
+      }),
+    });
+  }
+
+  return {
+    text,
+    copyCode,
+    nativeFlowMessage: {
+      messageParamsJson: JSON.stringify(params),
+      buttons: nativeButtons,
+    },
+  };
+}
