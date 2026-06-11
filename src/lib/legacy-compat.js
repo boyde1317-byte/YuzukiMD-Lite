@@ -100,9 +100,7 @@ function extractMentions(text) {
 }
 
 async function downloadQuotedMedia(msg, sock) {
-  const { createRequire } = await import("module");
-  const _require = createRequire(import.meta.url);
-  const { downloadMediaMessage } = _require("@whiskeysockets/baileys");
+  const { downloadMediaMessage } = await import("@whiskeysockets/baileys");
 
   const ctx = msg.message?.extendedTextMessage?.contextInfo;
   if (!ctx?.quotedMessage) return null;

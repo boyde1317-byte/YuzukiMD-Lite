@@ -380,9 +380,7 @@ export async function sendWithPreview(sock, jid, text, preview, opts = {}) {
  * @param {{ quoted? }} opts
  */
 export async function sendCarousel(sock, jid, carousel, opts = {}) {
-  const { createRequire } = await import("module");
-  const _require = createRequire(import.meta.url);
-  const { generateWAMessageFromContent, prepareWAMessageMedia } = _require("@whiskeysockets/baileys");
+  const { generateWAMessageFromContent, prepareWAMessageMedia } = await import("@whiskeysockets/baileys");
 
   const cards = await Promise.all(
     carousel.items.map(async (item) => {

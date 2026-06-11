@@ -38,14 +38,12 @@ import { sendContact, sendMultiContact, sendFakeContact, createFakeQuoted, sendW
 // Free AI — no API keys required (Pollinations.AI + StreamElements + Groq)
 import QRCode from "qrcode";
 import ytdl from "@distube/ytdl-core";
-import { createRequire } from "module";
-const _require = createRequire(import.meta.url);
-const {
+import {
   downloadMediaMessage,
   generateWAMessageFromContent,
   prepareWAMessageMedia,
   proto,
-} = _require("@whiskeysockets/baileys");
+} from "@whiskeysockets/baileys";
 // ── . merged scrapers & libs ──────────────────────────────────────────
 import { tiktokDl } from "./lib/scrape/tiktok.js";
 import { igdl as igDl } from "./lib/scrape/instagram.js";

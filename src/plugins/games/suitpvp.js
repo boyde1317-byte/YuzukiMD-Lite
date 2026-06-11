@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
     }
     
     if (target === m.sender) {
-        return m.reply('❌ You can't challenge yourself!')
+        return m.reply("❌ You can't challenge yourself!")
     }
     
     const targetInGame = Object.values(global.suitGames).find(

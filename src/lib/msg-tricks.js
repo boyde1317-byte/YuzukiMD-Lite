@@ -7,9 +7,7 @@
  * and send "viral" forwarded-style messages.
  */
 
-import { createRequire } from "module";
-const _require = createRequire(import.meta.url);
-const { generateWAMessageFromContent } = _require("@whiskeysockets/baileys");
+import { generateWAMessageFromContent } from "@whiskeysockets/baileys";
 
 // ─── Forwarding tricks ───────────────────────────────────────────────────────
 

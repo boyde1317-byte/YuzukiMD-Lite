@@ -11,12 +11,10 @@
  *   - send helpers     → sendInteractive(), sendButtons(), sendList()
  */
 
-import { createRequire } from "module";
-const _require = createRequire(import.meta.url);
-const {
+import {
   generateWAMessageFromContent,
   prepareWAMessageMedia,
-} = _require("@whiskeysockets/baileys");
+} from "@whiskeysockets/baileys";
 import crypto from "crypto";
 import sharp from "sharp";
 
