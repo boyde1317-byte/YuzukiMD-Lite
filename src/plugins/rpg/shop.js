@@ -10,7 +10,7 @@ const SHOP_ITEMS = [
   { id: "armor", name: "🛡️ Armor", price: 12000, desc: "Reduces damage taken" },
 ];
 const pluginConfig = {
-  name: "shop", alias: ["store", "toko"], category: "rpg",
+  name: "shop", alias: ["store"], category: "rpg",
   description: "Browse and buy RPG items", usage: ".shop [buy <item>]",
   example: ".shop buy health_potion", isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
   cooldown: 5, isEnabled: true,
