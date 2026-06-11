@@ -1,5 +1,3 @@
-
-
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -138,9 +136,9 @@ function getHint(answer, revealCount = 2) {
 function isSurrender(text) {
     if (!text) return false;
     const surrenderWords = [
-        'nyerah', 'aku nyerah', 'gw nyerah', 'gue nyerah', 'menyerah',
-        'aku menyerah', 'gw menyerah', 'skip', 'lewat', 'ga tau',
-        'gatau', 'gak tau', 'tidak tau', 'nggak tau', 'give up'
+        'surrender', 'give up', 'i give up', 'i quit', 'quit',
+        'skip', 'pass', 'idk', "i don't know", 'no idea',
+        'giveup', 'givup', 'forfeit'
     ];
     const normalized = text.toLowerCase().trim();
     return surrenderWords.some(word => normalized === word);
@@ -217,8 +215,8 @@ function getRemainingTime(chatId) {
 }
 
 function formatRemainingTime(seconds) {
-    if (seconds <= 0) return '0 detik';
-    if (seconds < 60) return `${seconds} detik`;
+    if (seconds <= 0) return '0 seconds';
+    if (seconds < 60) return `${seconds} seconds`;
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}m ${secs}s`;
