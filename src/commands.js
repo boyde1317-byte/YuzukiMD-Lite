@@ -375,10 +375,10 @@ export async function handleCommand({ sock, msg, command, args }) {
     case "allmenu": {
       await sock.sendMessage(jid, { react: { text: "⏱️", key: msg.key } });
       try {
-        const botName = settings.botName ?? "Yuzuki";
+        const botName  = settings.botName ?? "Yuzuki";
         const totalCmds = Object.values(CATEGORIES).reduce((a, c) => a + c.commands.length, 0);
 
-        // Build full caption — every category and every command
+        // Build the full command list caption
         const fullCaption =
           `🎐 *${botName} — Full Command List* 🎐\n` +
           `┈┈┈┈୨♡୧┈┈┈┈\n\n` +
@@ -391,102 +391,43 @@ export async function handleCommand({ sock, msg, command, args }) {
           `\n\n┈┈┈┈୨♡୧┈┈┈┈\n` +
           `✨ *${totalCmds} commands total* — Use *${prefix}menu <category>* for details.`;
 
-        // Fetch menu background via HTTP — MENU_BG is a URL, not a local file path.
-        // fs.readFileSync(url) throws ENOENT; must use fetch() instead.
-        const _MENU_THUMB = "https://www.upload.ee/image/19419994/file.jpg";
-        let imgBuf;
+        // Fetch banner image — MENU_BG is a URL, not a local path
+        const _THUMB = "https://www.upload.ee/image/19419994/file.jpg";
+        let imgBuf = null;
+        const _imgSrc = settings.menuBgUrl || _THUMB;
         try {
-          const _imgSrc = settings.menuBgUrl || _MENU_THUMB;
           const r = await fetch(_imgSrc);
           if (r.ok) imgBuf = Buffer.from(await r.arrayBuffer());
-          else throw new Error(`HTTP ${r.status}`);
-        } catch {
-          try {
-            const r2 = await fetch(_MENU_THUMB);
-            if (r2.ok) imgBuf = Buffer.from(await r2.arrayBuffer());
-          } catch { imgBuf = null; }
+        } catch { /* fall through to default */ }
+        if (!imgBuf && _imgSrc !== _THUMB) {
+          try { const r2 = await fetch(_THUMB); if (r2.ok) imgBuf = Buffer.from(await r2.arrayBuffer()); } catch { /* no image */ }
         }
 
-        const vq = getVerifiedQuoted(settings);
+        const adReply = {
+          title: botName,
+          body: `${totalCmds} commands available`,
+          thumbnailUrl: _THUMB,
+          thumbnail: imgBuf || undefined,
+          mediaType: 1,
+          renderLargerThumbnail: false,
+          sourceUrl: "https://github.com/boyde1317-byte/YuzukiMD-Lite",
+        };
 
-        // Single select rows — one per category, same as .menu
-        const menuRows = Object.entries(CATEGORIES).map(([key, cat]) => ({
-          title: `${cat.icon} ${cat.title}`,
-          description: `${cat.commands.length} commands`,
-          id: `${prefix}menu ${key}`,
-        }));
-
-        // Try interactive image + single_select (mirrors .menu behaviour)
-        try {
-          const mediaHeader = await prepareWAMessageMedia(
-            { image: imgBuf },
-            { upload: sock.waUploadToServer }
+        // Plain image + caption — works on official @whiskeysockets/baileys.
+        // No generateWAMessageFromContent / relayMessage / interactive messages.
+        if (imgBuf) {
+          await sock.sendMessage(jid,
+            { image: imgBuf, caption: fullCaption, contextInfo: { externalAdReply: adReply } },
+            { quoted: msg }
           );
-          const interactiveMsg = generateWAMessageFromContent(jid, {
-            viewOnceMessage: {
-              message: {
-                messageContextInfo: { deviceListMetadata: {}, deviceListMetadataVersion: 2 },
-                interactiveMessage: {
-                  contextInfo: {
-                    externalAdReply: {
-                      title: botName,
-                      body: `${totalCmds} commands available`,
-                      thumbnail: imgBuf,
-                      mediaType: 1,
-                      renderLargerThumbnail: false,
-                      sourceUrl: "https://github.com/KyokaAizen665/Yuzuki-Md-V2",
-                    },
-                    quotedMessage: vq.message,
-                    participant: vq.key.participant,
-                    remoteJid: vq.key.remoteJid,
-                  },
-                  body: { text: fullCaption },
-                  footer: { text: `Powered by ${botName}` },
-                  header: { title: "", subtitle: "", hasMediaAttachment: true, ...mediaHeader },
-                  nativeFlowMessage: {
-                    buttons: [{
-                      name: "single_select",
-                      buttonParamsJson: JSON.stringify({
-                        title: "📂 Browse Categories",
-                        sections: [{ title: "Menu Categories", rows: menuRows }],
-                      }),
-                    }],
-                  },
-                },
-              },
-            },
-          }, { quoted: msg }, {});
-          await sock.relayMessage(
-            interactiveMsg.key.remoteJid,
-            interactiveMsg.message,
-            { messageId: interactiveMsg.key.id }
+        } else {
+          await sock.sendMessage(jid,
+            { text: fullCaption, contextInfo: { externalAdReply: adReply } },
+            { quoted: msg }
           );
-        } catch {
-          // Fallback — plain image with caption, or text-only if no image available
-          if (imgBuf) {
-            await sock.sendMessage(jid, {
-              image: imgBuf,
-              caption: fullCaption,
-              contextInfo: {
-                externalAdReply: {
-                  title: botName,
-                  body: `${totalCmds} commands available`,
-                  thumbnail: imgBuf,
-                  mediaType: 1,
-                  renderLargerThumbnail: false,
-                  sourceUrl: "https://github.com/KyokaAizen665/Yuzuki-Md-V2",
-                },
-                quotedMessage: vq.message,
-                participant: vq.key.participant,
-                remoteJid: vq.key.remoteJid,
-              },
-            }, { quoted: vq });
-          } else {
-            await reply(fullCaption);
-          }
         }
 
-        await sock.sendMessage(jid, { react: { text: "✅", key: msg.key } });
+      await sock.sendMessage(jid, { react: { text: "✅", key: msg.key } });
       } catch (e) {
         await sock.sendMessage(jid, { react: { text: "❌", key: msg.key } });
         await reply(`❌ allmenu failed: ${e.message}`);
