@@ -11,7 +11,7 @@ const JOBS = [
   { name: "🧑‍🌾 Farmer", min: 1000, max: 3500 },
 ];
 const pluginConfig = {
-  name: "work2", alias: ["kerja"], category: "rpg",
+  name: "work2", alias: [], category: "rpg",
   description: "Work to earn coins", usage: ".work2",
   example: ".work2", isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
   cooldown: 300, isEnabled: true,
