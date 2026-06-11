@@ -349,7 +349,7 @@ async function handler(m, { sock }) {
           `┃ 👥 Player: 1/${MAX_PLAYERS}\n` +
           `┃ ⏱️ Min: ${MIN_PLAYERS} player\n` +
           `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-          `╭┈┈⬡「 🎮 *CARA MAIN* 」\n` +
+          `╭┈┈⬡「 🎮 *HOW TO PLAY* 」\n` +
           `┃ ➕ \`${prefix}ww join\` - Join\n` +
           `┃ ▶️ \`${prefix}ww start\` - Start (host)\n` +
           `┃ 👥 \`${prefix}ww player\` - Player list\n` +
@@ -668,7 +668,7 @@ async function handler(m, { sock }) {
 
     delete: async () => {
       if (!ww[m.chat]) {
-        return m.reply(`❌ Tidak ada game di room ini!`);
+        return m.reply(`❌ No active game in this room!`);
       }
 
       const isOwner = ww[m.chat].owner === m.sender;
