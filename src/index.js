@@ -26,6 +26,9 @@ let chalk;
 try { chalk = (await import("chalk")).default; } catch { chalk = _mkChalk(); }
 await import("./server.js");
 const { startBot, logger } = await import("./bot.js");
+const { startTempCleaner, stopTempCleaner } = await import("./lib/temp-cleaner.js");
+const { startMemoryMonitor, stopMemoryMonitor } = await import("./lib/memory-monitor.js");
+const { flushDB } = await import("./lib/database.js");
 
 // ── Validate Node version ─────────────────────────────────────────────────────
 const nodeVersion = parseInt(process.version.slice(1));
@@ -103,20 +106,24 @@ if (!_phoneEnvCheck && !process.stdin.isTTY) {
   );
 }
 
+startTempCleaner();
+startMemoryMonitor();
+
 startBot().catch((err) => {
   logger.error({ err }, "Fatal error starting bot");
   setTimeout(() => process.exit(1), 2000);
 });
 
-process.on("SIGTERM", async () => {
-  logger.info("Received SIGTERM, shutting down...");
+async function _shutdown(signal) {
+  logger.info(`Received ${signal}, shutting down...`);
+  stopTempCleaner();
+  stopMemoryMonitor();
+  flushDB();
   process.exit(0);
-});
+}
 
-process.on("SIGINT", async () => {
-  logger.info("Received SIGINT, shutting down...");
-  process.exit(0);
-});
+process.on("SIGTERM", () => _shutdown("SIGTERM"));
+process.on("SIGINT",  () => _shutdown("SIGINT"));
 
 process.on("uncaughtException", (err) => {
   logger.error({ err }, "Uncaught exception — shutting down");
