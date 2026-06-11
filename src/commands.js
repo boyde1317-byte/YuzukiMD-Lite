@@ -411,10 +411,10 @@ export async function handleCommand({ sock, msg, command, args }) {
         // ── Time-based greeting (WIB = UTC+7) ──────────────────────────────
         const _wibHour = new Date(Date.now() + 7 * 3600000).getUTCHours();
         const _greeting =
-          _wibHour >= 4  && _wibHour < 10 ? "Selamat Pagi 🌅" :
-          _wibHour >= 10 && _wibHour < 15 ? "Selamat Siang ☀️" :
-          _wibHour >= 15 && _wibHour < 19 ? "Selamat Sore 🌇" :
-          "Selamat Malam 🌙";
+          _wibHour >= 4  && _wibHour < 10 ? "Good Morning 🌅" :
+          _wibHour >= 10 && _wibHour < 15 ? "Good Afternoon ☀️" :
+          _wibHour >= 15 && _wibHour < 19 ? "Good Evening 🌇" :
+          "Good Night 🌙";
 
         // ── Small-caps + bracket-box helpers (Ourin allmenu style) ─────────
         const _sc = (t) => {
@@ -453,11 +453,11 @@ export async function handleCommand({ sock, msg, command, args }) {
           return (ai===-1?999:ai) - (bi===-1?999:bi);
         });
 
-        let txt = _box("🤖", "KETERANGAN", [
-          "Ⓞ = Hanya untuk owner",
-          "ⓟ = Hanya untuk premium",
-          "Ⓛ = Membutuhkan limit",
-          "Ⓐ = Hanya untuk admin",
+        let txt = _box("🤖", "LEGEND", [
+          "Ⓞ = Owner only",
+          "ⓟ = Premium only",
+          "Ⓛ = Requires limit",
+          "Ⓐ = Admin only",
         ]);
 
         let totalPluginCmds = 0;
@@ -495,7 +495,7 @@ export async function handleCommand({ sock, msg, command, args }) {
                     ? { title: "", subtitle: "", hasMediaAttachment: true, imageMessage: _headerMedia.imageMessage }
                     : { hasMediaAttachment: false },
                   body: { text: txt },
-                  footer: { text: `Ketik ${prefix}menu untuk kembali ke menu utama` },
+                  footer: { text: `Type ${prefix}menu to return to the main menu` },
                   contextInfo: {
                     isForwarded: true,
                     forwardingScore: 9,
@@ -515,7 +515,7 @@ export async function handleCommand({ sock, msg, command, args }) {
                       limited_time_offer: {
                         text: _greeting,
                         url: "Hai",
-                        copy_code: `Dibuat oleh ${botName}`,
+                        copy_code: `Made by ${botName}`,
                         expiration_time: Date.now() + 1000000,
                       },
                     }),
@@ -523,7 +523,7 @@ export async function handleCommand({ sock, msg, command, args }) {
                       {
                         name: "quick_reply",
                         buttonParamsJson: JSON.stringify({
-                          display_text: "🏠 Kembali Ke Menu Utama",
+                          display_text: "🏠 Back to Main Menu",
                           id: `${prefix}menu`,
                         }),
                       },
