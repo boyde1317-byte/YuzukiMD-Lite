@@ -12,7 +12,7 @@ const FISH = [
   { name: "🪸 Coral", price: 200, weight: 60 },
 ];
 const pluginConfig = {
-  name: "fishing", alias: ["fish", "memancing"], category: "rpg",
+  name: "fishing", alias: ["fish"], category: "rpg",
   description: "Go fishing and catch sea creatures", usage: ".fishing",
   example: ".fishing", isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
   cooldown: 90, isEnabled: true,
