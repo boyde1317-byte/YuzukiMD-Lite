@@ -5,7 +5,7 @@
 
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PLUGINS_DIR = path.resolve(__dirname, "../plugins");
@@ -37,7 +37,7 @@ export async function loadPlugins() {
     for (const file of files) {
       const filePath = path.join(catPath, file);
       try {
-        const mod = await import(`file://${filePath}`);
+        const mod = await import(pathToFileURL(filePath).href);
         if (!mod.config || typeof mod.handler !== "function") {
           console.log(`[plugin-loader] Skip ${file} (missing config/handler)`);
           continue;
