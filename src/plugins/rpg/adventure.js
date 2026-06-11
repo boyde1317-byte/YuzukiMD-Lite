@@ -1,6 +1,6 @@
 import { getDatabase, addExpWithLevelCheck, checkCooldown, formatKoin } from "../../lib/legacy-compat.js";
 const pluginConfig = {
-  name: "adventure", alias: ["adv", "petualangan"], category: "rpg",
+  name: "adventure", alias: ["adv"], category: "rpg",
   description: "Go on an adventure to gain EXP and rewards", usage: ".adventure",
   example: ".adventure", isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
   cooldown: 120, isEnabled: true,
