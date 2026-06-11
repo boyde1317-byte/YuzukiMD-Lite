@@ -1,27 +1,76 @@
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 
-const DB_PATH = "./data/database.json";
-const DB_DIR = "./data";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const DB_DIR  = path.resolve(__dirname, "../../data");
+const DB_PATH = path.join(DB_DIR, "database.json");
+const FLUSH_INTERVAL = 5000;
+
+const DEFAULT_DB = () => ({
+  users: {},
+  settings: { cmdLimit: {}, lastResetLimit: null },
+});
+
+// ── In-memory cache ───────────────────────────────────────────────────────────
+let _cache = null;
+let _dirty = false;
+let _flushTimer = null;
 
 function ensureDir() {
   if (!fs.existsSync(DB_DIR)) fs.mkdirSync(DB_DIR, { recursive: true });
 }
 
-export function loadDB() {
+function _read() {
   ensureDir();
   if (!fs.existsSync(DB_PATH)) {
-    const init = { users: {}, settings: { cmdLimit: {}, lastResetLimit: null } };
+    const init = DEFAULT_DB();
     fs.writeFileSync(DB_PATH, JSON.stringify(init, null, 2));
     return init;
   }
   try { return JSON.parse(fs.readFileSync(DB_PATH, "utf8")); }
-  catch { return { users: {}, settings: { cmdLimit: {}, lastResetLimit: null } }; }
+  catch { return DEFAULT_DB(); }
+}
+
+function _scheduleFlush() {
+  if (_flushTimer) return;
+  _flushTimer = setTimeout(() => {
+    _flushTimer = null;
+    if (_dirty && _cache) {
+      ensureDir();
+      try {
+        fs.writeFileSync(DB_PATH, JSON.stringify(_cache, null, 2));
+        _dirty = false;
+      } catch (err) {
+        console.error("[database] flush error:", err.message);
+      }
+    }
+  }, FLUSH_INTERVAL);
+  if (_flushTimer.unref) _flushTimer.unref();
+}
+
+export function loadDB() {
+  if (!_cache) _cache = _read();
+  return _cache;
 }
 
 export function saveDB(db) {
-  ensureDir();
-  fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2));
+  _cache = db;
+  _dirty = true;
+  _scheduleFlush();
+}
+
+// Force an immediate write — call on graceful shutdown
+export function flushDB() {
+  if (_dirty && _cache) {
+    ensureDir();
+    try {
+      fs.writeFileSync(DB_PATH, JSON.stringify(_cache, null, 2));
+      _dirty = false;
+    } catch (err) {
+      console.error("[database] flushDB error:", err.message);
+    }
+  }
 }
 
 export function initUserDB(senderJid, pushName = "User") {
@@ -52,22 +101,21 @@ export function initUserDB(senderJid, pushName = "User") {
     };
   } else {
     const u = db.users[senderJid];
-    if (typeof u.level !== "number") u.level = 0;
-    if (typeof u.exp !== "number") u.exp = 0;
-    if (typeof u.money !== "number") u.money = 0;
-    if (typeof u.bank !== "number") u.bank = 0;
-    if (typeof u.health !== "number") u.health = 100;
+    if (typeof u.level     !== "number") u.level = 0;
+    if (typeof u.exp       !== "number") u.exp = 0;
+    if (typeof u.money     !== "number") u.money = 0;
+    if (typeof u.bank      !== "number") u.bank = 0;
+    if (typeof u.health    !== "number") u.health = 100;
     if (typeof u.limitfree !== "number") u.limitfree = 15;
     if (typeof u.limitprem !== "number") u.limitprem = u.premium ? 500 : 0;
-    if (typeof u.limitbuy !== "number") u.limitbuy = 0;
-    if (typeof u.lastmining !== "number") u.lastmining = 0;
+    if (typeof u.limitbuy  !== "number") u.limitbuy = 0;
+    if (typeof u.lastmining  !== "number") u.lastmining = 0;
     if (typeof u.lastdungeon !== "number") u.lastdungeon = 0;
-    if (typeof u.lastwork !== "number") u.lastwork = 0;
-    if (typeof u.lastdaily !== "number") u.lastdaily = 0;
+    if (typeof u.lastwork    !== "number") u.lastwork = 0;
+    if (typeof u.lastdaily   !== "number") u.lastdaily = 0;
     if (!u.name) u.name = pushName;
-    // New fields — backward compat
-    if (typeof u.bio !== "string") u.bio = "";
-    if (!Array.isArray(u.badges)) u.badges = [];
+    if (typeof u.bio   !== "string") u.bio = "";
+    if (!Array.isArray(u.badges))    u.badges = [];
     if (typeof u.msgCount !== "number") u.msgCount = 0;
     if (!Array.isArray(u.redeemedKeys)) u.redeemedKeys = [];
   }
@@ -112,9 +160,6 @@ export function useLimit(senderJid, cost, isOwner) {
   saveDB(db);
 }
 
-// ── XP / level / coin helpers ─────────────────────────────────────────────────
-
-// XP required to advance from the given level to the next
 function xpToNext(level) {
   return (level + 1) * 100;
 }
@@ -136,10 +181,6 @@ function _checkBadges(u) {
   }
 }
 
-/**
- * Award XP to a user. Handles level-ups and badge grants.
- * Returns { leveled: bool, oldLevel: number, newLevel: number, user: object }
- */
 export function addXP(senderJid, amount, pushName = "User") {
   const db = loadDB();
   if (!db.users[senderJid] || typeof db.users[senderJid] !== "object") {
@@ -157,7 +198,7 @@ export function addXP(senderJid, amount, pushName = "User") {
 
   u.exp = (u.exp || 0) + amount;
   u.msgCount += 1;
-  u.name = pushName; // keep name fresh
+  u.name = pushName;
 
   const oldLevel = u.level || 0;
   let leveled = false;
@@ -172,9 +213,6 @@ export function addXP(senderJid, amount, pushName = "User") {
   return { leveled, oldLevel, newLevel: u.level, user: u };
 }
 
-/**
- * Add coins to a user. Returns new balance.
- */
 export function addCoins(senderJid, amount) {
   const db = loadDB();
   const u = db.users[senderJid];
@@ -185,9 +223,6 @@ export function addCoins(senderJid, amount) {
   return u.money;
 }
 
-/**
- * Spend coins. Returns true on success, false if insufficient funds.
- */
 export function spendCoins(senderJid, amount) {
   const db = loadDB();
   const u = db.users[senderJid];
@@ -197,10 +232,6 @@ export function spendCoins(senderJid, amount) {
   return true;
 }
 
-/**
- * Returns sorted leaderboard array [ { jid, ...userData } ]
- * sorted by level DESC then exp DESC.
- */
 export function getLeaderboard(limit = 10) {
   const db = loadDB();
   return Object.entries(db.users)
@@ -210,9 +241,6 @@ export function getLeaderboard(limit = 10) {
     .slice(0, limit);
 }
 
-/**
- * Returns rank position (1-indexed) of a jid among registered users.
- */
 export function getRankPosition(senderJid) {
   const db = loadDB();
   const sorted = Object.entries(db.users)
