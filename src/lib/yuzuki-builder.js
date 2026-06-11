@@ -188,12 +188,19 @@ export class NativeFlowCard {
   }
 
   async send(jid, opts = {}) {
-    const msg = await this.build(jid, opts);
-    await this.#sock.relayMessage(msg.key.remoteJid, msg.message, {
-      messageId: msg.key.id,
-      ...opts,
-    });
-    return msg;
+    // Try the interactive path; if it fails (common on official @whiskeysockets/baileys
+    // — interactiveMessage/nativeFlowMessage are blocked for personal accounts) fall back
+    // to a plain sendMessage so callers never silently lose content.
+    try {
+      const msg = await this.build(jid, opts);
+      await this.#sock.relayMessage(msg.key.remoteJid, msg.message, {
+        messageId: msg.key.id,
+      });
+      return msg;
+    } catch {
+      const text = [this._title, this._body].filter(Boolean).join("\n\n") || "(menu)";
+      return this.#sock.sendMessage(jid, { text, contextInfo: this._contextInfo }, opts);
+    }
   }
 }
 
