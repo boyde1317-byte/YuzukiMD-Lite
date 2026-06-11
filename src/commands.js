@@ -311,7 +311,7 @@ export async function handleCommand({ sock, msg, command, args }) {
       if (sub && CATEGORIES[sub]) {
         const caption = buildSub(botName, prefix, sub);
         const vq = getVerifiedQuoted(settings);
-        const menuCtx = {
+        const subCtx = {
           forwardingScore: 2025,
           isForwarded: true,
           ...(settings.channelId && settings.channelName ? {
@@ -326,7 +326,13 @@ export async function handleCommand({ sock, msg, command, args }) {
           remoteJid: vq.key.remoteJid,
         };
         try {
-          await sock.sendMessage(jid, { text: caption, contextInfo: menuCtx });
+          const subCard = new NativeFlowCard(sock);
+          subCard
+            .setBody(caption)
+            .setFooter(`${prefix}allmenu — full command list`)
+            .addQuickReply("🏠 Back to Main Menu", `${prefix}menu`)
+            .setContext(subCtx);
+          await subCard.send(jid);
         } catch {
           await reply(caption);
         }
