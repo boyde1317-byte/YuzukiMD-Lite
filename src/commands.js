@@ -402,7 +402,7 @@ export async function handleCommand({ sock, msg, command, args }) {
       break;
     }
 
-    // ── .allmenu — full command list, image + single select, no carousel ──────────
+    // ── .allmenu — full command list, NativeFlowCard (OURIN MD 3 format) ───────────
     case "allmenu": {
       await sock.sendMessage(jid, { react: { text: "⏱️", key: msg.key } });
       try {
@@ -460,7 +460,6 @@ export async function handleCommand({ sock, msg, command, args }) {
           "Ⓐ = Admin only",
         ]);
 
-        let totalPluginCmds = 0;
         for (const cat of _sortedCats) {
           if (cat === "owner" && !isOwner(senderJid, settings)) continue;
           const plugins = getPluginsByCategory(cat);
@@ -468,74 +467,35 @@ export async function handleCommand({ sock, msg, command, args }) {
           const emoji = _CAT_EMOJIS[cat] || "📋";
           const lines = plugins.map(p => `${prefix}${p.config.name}${_sym(p.config.name)}`);
           txt += _box(emoji, cat, lines);
-          totalPluginCmds += plugins.length;
         }
 
-        // ── Fetch & upload image for interactive header (cached) ────────────
+        // ── Build & send using NativeFlowCard (proper OURIN MD 3 format) ───
         const _thumb = await getThumb("menu");
-        let _headerMedia = null;
-        if (_thumb) {
-          try {
-            _headerMedia = await prepareWAMessageMedia(
-              { image: _thumb },
-              { upload: sock.waUploadToServer }
-            );
-          } catch { /* header image optional */ }
-        }
+        const card = new NativeFlowCard(sock);
+        card
+          .setBody(txt)
+          .setFooter(`Type ${prefix}menu to return to the main menu`)
+          .setOffer({ text: _greeting, copyCode: `Made by ${botName}`, durationMs: 1000000 })
+          .addQuickReply("🏠 Back to Main Menu", `${prefix}menu`);
 
-        // ── Send interactive message (Ourin allmenu variant 2) ──────────────
-        await sock.relayMessage(
-          jid,
-          {
-            viewOnceMessage: {
-              message: {
-                messageContextInfo: {},
-                interactiveMessage: {
-                  header: _headerMedia?.imageMessage
-                    ? { title: "", subtitle: "", hasMediaAttachment: true, imageMessage: _headerMedia.imageMessage }
-                    : { hasMediaAttachment: false },
-                  body: { text: txt },
-                  footer: { text: `Type ${prefix}menu to return to the main menu` },
-                  contextInfo: {
-                    isForwarded: true,
-                    forwardingScore: 9,
-                    participant: "0@s.whatsapp.net",
-                    quotedMessage: { conversation: botName },
-                    mentionedJid: [senderJid],
-                    ...(settings.channelId && settings.channelName ? {
-                      forwardedNewsletterMessageInfo: {
-                        newsletterJid: settings.channelId,
-                        serverMessageId: 127,
-                        newsletterName: settings.channelName,
-                      },
-                    } : {}),
-                  },
-                  nativeFlowMessage: {
-                    messageParamsJson: JSON.stringify({
-                      limited_time_offer: {
-                        text: _greeting,
-                        url: "Hai",
-                        copy_code: `Made by ${botName}`,
-                        expiration_time: Date.now() + 1000000,
-                      },
-                    }),
-                    buttons: [
-                      {
-                        name: "quick_reply",
-                        buttonParamsJson: JSON.stringify({
-                          display_text: "🏠 Back to Main Menu",
-                          id: `${prefix}menu`,
-                        }),
-                      },
-                    ],
-                  },
-                },
-              },
+        if (_thumb) card.setMedia({ image: _thumb });
+
+        card.setContext({
+          isForwarded: true,
+          forwardingScore: 9,
+          participant: "0@s.whatsapp.net",
+          quotedMessage: { conversation: botName },
+          mentionedJid: [senderJid],
+          ...(settings.channelId && settings.channelName ? {
+            forwardedNewsletterMessageInfo: {
+              newsletterJid: settings.channelId,
+              serverMessageId: 127,
+              newsletterName: settings.channelName,
             },
-          },
-          {}
-        );
+          } : {}),
+        });
 
+        await card.send(jid);
         await sock.sendMessage(jid, { react: { text: "✅", key: msg.key } });
       } catch (e) {
         await sock.sendMessage(jid, { react: { text: "❌", key: msg.key } });
