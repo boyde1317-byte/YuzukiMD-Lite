@@ -3,6 +3,9 @@ import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 import { exec } from "child_process";
+import { fileURLToPath } from "url";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const DATA_DIR = path.resolve(__dirname, "../data");
 import { promisify } from "util";
 import {
   loadSettings,
@@ -119,14 +122,27 @@ function bjVal(h){let v=0,a=0;for(const c of h){const r=c.slice(0,-1);if(r==="A"
   const startTime = Date.now();
 
 // ── Per-command thumbnail helper ──────────────────────────────────────────────
-// Looks for src/assets/<name>.(jpg|png|jpeg|webp). Falls back to menu_bg.jpg.
-function getThumb(name) {
-  const dir = path.dirname(MENU_BG);
-  for (const ext of ["jpg", "png", "jpeg", "webp"]) {
-    const p = path.join(dir, `${name}.${ext}`);
-    if (fs.existsSync(p)) return fs.readFileSync(p);
+// Looks for src/assets/<name>.(jpg|png|jpeg|webp). Falls back to MENU_BG.
+// MENU_BG may be an HTTPS URL (GitHub CDN) — fetch it via HTTP in that case.
+async function getThumb(name) {
+  const isUrl = (s) => /^https?:\/\//i.test(s);
+  if (!isUrl(MENU_BG)) {
+    const dir = path.dirname(MENU_BG);
+    for (const ext of ["jpg", "png", "jpeg", "webp"]) {
+      const p = path.join(dir, `${name}.${ext}`);
+      if (fs.existsSync(p)) return fs.readFileSync(p);
+    }
+    if (fs.existsSync(MENU_BG)) return fs.readFileSync(MENU_BG);
+    return null;
   }
-  return fs.readFileSync(MENU_BG);
+  // URL-based assets (GitHub Releases CDN)
+  try {
+    const { default: axios } = await import("axios");
+    const res = await axios.get(MENU_BG, { responseType: "arraybuffer", timeout: 8000 });
+    return Buffer.from(res.data);
+  } catch {
+    return null;
+  }
 }
 
 const OWNER_COMMANDS = new Set([
@@ -155,7 +171,9 @@ export async function handleCommand({ sock, msg, command, args }) {
   const reply = async (text) => {
     try {
       await sock.sendMessage(jid, { text }, { quoted: msg });
-    } catch {}
+    } catch (err) {
+      console.error(`[reply] Failed to send message to ${jid}:`, err?.message ?? err);
+    }
   };
 
   const channelQuote = (settings.channelId && settings.channelName)
@@ -194,7 +212,7 @@ export async function handleCommand({ sock, msg, command, args }) {
   // the caption as the message body. Falls back to plain text on error.
   const replyWithThumb = async (thumbName, caption) => {
     try {
-      const thumb = getThumb(thumbName);
+      const thumb = await getThumb(thumbName);
       await sock.sendMessage(jid, { image: thumb, caption }, { quoted: channelQuote || msg });
     } catch {
       await replyChannel(caption);
@@ -2259,7 +2277,7 @@ break;
         uTrTo.money = (uTrTo.money || 0) + trAmt;
         saveDB(dbTr);
         await sock.sendMessage(jid, {
-          image: getThumb("transfer"),
+          image: await getThumb("transfer"),
           caption:
             `💸 *Transfer Sent!*\n` +
             `━━━━━━━━━━━━━━━━━━━\n` +
@@ -4541,7 +4559,7 @@ showAdAttribution: false, } },
       case "addbadword": {
         if (!text) return reply(`📌 Usage: ${prefix}addbadword <word>`);
         if (!isOwner(sender)) return reply("❌ Owner only.");
-        const bwPath = "./data/badwords.json";
+        const bwPath = path.join(DATA_DIR, "badwords.json");
         let bw = [];
         try { bw = JSON.parse(fs.readFileSync(bwPath, "utf8")); } catch {}
         if (!bw.includes(text.toLowerCase())) { bw.push(text.toLowerCase()); fs.writeFileSync(bwPath, JSON.stringify(bw)); }
@@ -4552,7 +4570,7 @@ showAdAttribution: false, } },
       case "delbadword": {
         if (!text) return reply(`📌 Usage: ${prefix}delbadword <word>`);
         if (!isOwner(sender)) return reply("❌ Owner only.");
-        const bwPath = "./data/badwords.json";
+        const bwPath = path.join(DATA_DIR, "badwords.json");
         let bw = [];
         try { bw = JSON.parse(fs.readFileSync(bwPath, "utf8")); } catch {}
         bw = bw.filter((w) => w !== text.toLowerCase());
