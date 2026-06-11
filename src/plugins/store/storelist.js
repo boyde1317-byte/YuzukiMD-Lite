@@ -7,7 +7,7 @@ import { NativeFlowCard } from "../../lib/yuzuki-builder.js";
 
 const pluginConfig = {
   name: "storelist",
-  alias: ["liststore", "products", "toko"],
+  alias: ["liststore", "products"],
   category: "store",
   description: "Browse store products (interactive card)",
   usage: ".storelist",
