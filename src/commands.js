@@ -402,7 +402,7 @@ export async function handleCommand({ sock, msg, command, args }) {
       break;
     }
 
-    // ── .allmenu — full command list, NativeFlowCard (OURIN MD 3 format) ───────────
+    // ── .allmenu — full command list, NativeFlowCard + single_select ─────────────────
     case "allmenu": {
       await sock.sendMessage(jid, { react: { text: "⏱️", key: msg.key } });
       try {
@@ -416,7 +416,7 @@ export async function handleCommand({ sock, msg, command, args }) {
           _wibHour >= 15 && _wibHour < 19 ? "Good Evening 🌇" :
           "Good Night 🌙";
 
-        // ── Small-caps + bracket-box helpers (Ourin allmenu style) ─────────
+        // ── Small-caps + bracket-box helpers ───────────────────────────────
         const _sc = (t) => {
           const m = {a:"ᴀ",b:"ʙ",c:"ᴄ",d:"ᴅ",e:"ᴇ",f:"ꜰ",g:"ɢ",h:"ʜ",i:"ɪ",j:"ᴊ",k:"ᴋ",l:"ʟ",m:"ᴍ",n:"ɴ",o:"ᴏ",p:"ᴘ",q:"ǫ",r:"ʀ",s:"s",t:"ᴛ",u:"ᴜ",v:"ᴠ",w:"ᴡ",x:"x",y:"ʏ",z:"ᴢ"};
           return t.toLowerCase().split("").map(c=>m[c]||c).join("");
@@ -439,7 +439,7 @@ export async function handleCommand({ sock, msg, command, args }) {
           return s.length ? " " + s.join(" ") : "";
         };
 
-        // ── Build body text from live plugin-loader data ────────────────────
+        // ── Category config ─────────────────────────────────────────────────
         const _CAT_EMOJIS = {
           owner:"👑", main:"🏠", tools:"🛠️", canvas:"🎨",
           fun:"🎮", games:"🎯", game:"🎯", rpg:"⚔️", store:"🏪",
@@ -453,6 +453,7 @@ export async function handleCommand({ sock, msg, command, args }) {
           return (ai===-1?999:ai) - (bi===-1?999:bi);
         });
 
+        // ── Build body text ─────────────────────────────────────────────────
         let txt = _box("🤖", "LEGEND", [
           "Ⓞ = Owner only",
           "ⓟ = Premium only",
@@ -460,23 +461,32 @@ export async function handleCommand({ sock, msg, command, args }) {
           "Ⓐ = Admin only",
         ]);
 
+        const _visibleCats = [];
         for (const cat of _sortedCats) {
           if (cat === "owner" && !isOwner(senderJid, settings)) continue;
           const plugins = getPluginsByCategory(cat);
           if (!plugins.length) continue;
+          _visibleCats.push(cat);
           const emoji = _CAT_EMOJIS[cat] || "📋";
           const lines = plugins.map(p => `${prefix}${p.config.name}${_sym(p.config.name)}`);
           txt += _box(emoji, cat, lines);
         }
 
-        // ── Build & send using NativeFlowCard (proper OURIN MD 3 format) ───
+        // ── Build single_select rows from categories ────────────────────────
+        const _selectRows = _visibleCats.map(cat => ({
+          id: `${prefix}menu ${cat}`,
+          title: `${_CAT_EMOJIS[cat] || "📋"} ${cat.charAt(0).toUpperCase() + cat.slice(1)}`,
+          description: `View ${cat} commands`,
+        }));
+
+        // ── Send via NativeFlowCard (proper OURIN MD 3 format) ──────────────
         const _thumb = await getThumb("menu");
         const card = new NativeFlowCard(sock);
         card
           .setBody(txt)
           .setFooter(`Type ${prefix}menu to return to the main menu`)
           .setOffer({ text: _greeting, copyCode: `Made by ${botName}`, durationMs: 1000000 })
-          .addQuickReply("🏠 Back to Main Menu", `${prefix}menu`);
+          .addSelect("📂 Browse Categories", "Menu Categories", _selectRows);
 
         if (_thumb) card.setMedia({ image: _thumb });
 
