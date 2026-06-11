@@ -8,7 +8,7 @@ const DONORS = [
   { name: "🧑‍🎤 Street Musician", min: 300, max: 1500 },
 ];
 const pluginConfig = {
-  name: "beg", alias: ["ngemis", "mengemis"], category: "rpg",
+  name: "beg", alias: [], category: "rpg",
   description: "Beg for coins on the street", usage: ".beg",
   example: ".beg", isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
   cooldown: 180, isEnabled: true,
